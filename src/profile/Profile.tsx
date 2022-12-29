@@ -83,15 +83,15 @@ export const Profile: FC = () => {
                 </MainText>
                 <SubText>
                     I'm a student at{" "}
-                    <HighlightedText color="#8EBB4C">
+                    <HighlightedText color="#679C41">
                         Babson College
                     </HighlightedText>{" "}
                     studying{" "}
-                    <HighlightedText color="#B53512">
+                    <HighlightedText color="#CC2D29">
                         Business Administration
                     </HighlightedText>{" "}
                     with a passion in{" "}
-                    <HighlightedText color="#4660C7">
+                    <HighlightedText color="#2877A8">
                         Computer Science
                     </HighlightedText>
                 </SubText>
