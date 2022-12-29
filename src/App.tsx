@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import "./App.css";
-import { Profile } from "./Profile";
+import { Profile } from "./profile/Profile";
 
 const StyledApp = styled.div`
     background-color: teal;
