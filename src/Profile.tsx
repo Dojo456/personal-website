@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
+import { SocialIcon } from "react-social-icons";
 import styled from "styled-components";
 const headshot = require("./Headshot.jpg");
 
@@ -8,6 +9,7 @@ const DisplayDiv = styled.div<{
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
     width: 100%;
     flex-direction: ${(props) => (props.overflow ? "column" : "row")};
 `;
@@ -33,17 +35,63 @@ const MainText = styled.h1`
     max-width: 100%;
 `;
 
-const HighlightedText = styled.code`
-    font-size: 120%;
+const HighlightedText = styled.span`
+    font-size: 110%;
     color: white;
+    font-family: "Lucida Console", "Courier New", monospace;
+    text-transform: uppercase;
 `;
 
 const SubText = styled.p`
     font-size: larger;
     max-width: 650px;
     margin-bottom: 0px;
+    font-weight: 500;
     margin-top: 0px;
 `;
+
+const SocialsDiv = styled.div`
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+`;
+
+const SocialsHeader = styled.span`
+    font-size: x-large;
+    font-weight: bolder;
+    font-family: "Lucida Console", "Courier New", monospace;
+    margin-bottom: 10px;
+`;
+
+const SocialsList = styled.span`
+    display: flex;
+    flex-direction: row;
+`;
+
+interface StyledSocialIconProps {
+    url: string;
+}
+
+const InternalStyledIconDiv = styled.div`
+    width: 52px;
+    height: 52px;
+    background-color: white;
+    border-radius: 100%;
+    margin-right: 20px;
+`;
+
+const InternalStyledIcon = styled(SocialIcon)`
+    left: 1px;
+    top: 1px;
+`;
+
+const StyledSocialIcon: FC<StyledSocialIconProps> = (props) => {
+    return (
+        <InternalStyledIconDiv>
+            <InternalStyledIcon url={props.url}></InternalStyledIcon>
+        </InternalStyledIconDiv>
+    );
+};
 
 export const Profile: FC = () => {
     const [overflow, setOverflow] = useState(false);
@@ -74,8 +122,17 @@ export const Profile: FC = () => {
                 <SubText>
                     I'm a student at{" "}
                     <HighlightedText>Babson College</HighlightedText> studying
-                    Business Administration sdfsdfs sdfsfdds sdfsdf
+                    Business Administration with a passion in{" "}
+                    <HighlightedText>Computer Science.</HighlightedText>
                 </SubText>
+                <SocialsDiv>
+                    <SocialsHeader>Add My Socials:</SocialsHeader>
+                    <SocialsList>
+                        <StyledSocialIcon url="https://www.linkedin.com/in/daniel-liao-350a78202/"></StyledSocialIcon>
+                        <StyledSocialIcon url="https://github.com/Dojo456"></StyledSocialIcon>
+                        <StyledSocialIcon url="https://www.instagram.com/daniy_liao/"></StyledSocialIcon>
+                    </SocialsList>
+                </SocialsDiv>
             </TextDiv>
             <HeadshotImg src={headshot} alt="headshot"></HeadshotImg>
         </DisplayDiv>
