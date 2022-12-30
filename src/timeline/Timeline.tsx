@@ -32,8 +32,6 @@ export const Timeline: FC = () => {
 
     console.log(experiences);
 
-    const [repos, Repos] = useState<Experience[]>([]);
-
     useEffect(() => {
         fetch("https://api.github.com/users/Dojo456/repos")
             .then((resp) => {
@@ -46,8 +44,11 @@ export const Timeline: FC = () => {
 
     return (
         <DisplayDiv>
-            {experiences.map((experience) => (
-                <ExperienceDisplay experience={experience}></ExperienceDisplay>
+            {experiences.map((experience, idx) => (
+                <ExperienceDisplay
+                    key={idx}
+                    experience={experience}
+                ></ExperienceDisplay>
             ))}
         </DisplayDiv>
     );
