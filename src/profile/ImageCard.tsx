@@ -1,6 +1,7 @@
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
+import { HasShadows } from "../common/styles";
 import * as firebase from "../firebase";
 
 const BorderDiv = styled.div`
@@ -8,6 +9,7 @@ const BorderDiv = styled.div`
     width: 444px;
     height: 538px;
     margin: 10px;
+    ${HasShadows}
 `;
 
 const HeadshotImg = styled.img`

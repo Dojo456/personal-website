@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { HasShadows } from "../common/styles";
 import { ImageCard } from "./ImageCard";
 import { SocialDisplays } from "./SocialsDisplay";
 
@@ -18,6 +19,7 @@ const TextDiv = styled.div`
     padding: 10px;
     margin: 10px;
     background-color: white;
+    ${HasShadows}
 `;
 
 const MainText = styled.h1`
@@ -75,7 +77,7 @@ export const Profile: FC = () => {
 
     return (
         <DisplayDiv overflow={overflow}>
-            <TextDiv className="card">
+            <TextDiv>
                 <MainText ref={textRef}>
                     Hi. I'm{" "}
                     <HighlightedText color="#F6B222">Daniel</HighlightedText>
