@@ -18,27 +18,70 @@ const HeadshotImg = styled.img`
     height: 400px;
 `;
 
+const SlideshowDotsDiv = styled.div`
+    text-align: center;
+`;
+
+interface SlideshowDotProps {
+    selected: boolean;
+}
+
+const SlideshowDot = styled.div<SlideshowDotProps>`
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 15px 7px 0px;
+    background-color: ${(props) => (props.selected ? "#444444" : "#c4c4c4")};
+`;
+
 export const ImageCard: FC = (props) => {
     const [images, setImages] = useState<string[]>([]);
+    const [index, setIndex] = useState(0);
 
     useEffect(() => {
         // Create a reference under which you want to list
         const listRef = ref(firebase.storage, "/Headshot Slideshow");
 
-        // Find all the prefixes and items.
-        listAll(listRef)
-            .then((res) => {
-                Promise.all(
-                    res.items.map((itemRef) => getDownloadURL(itemRef))
-                ).then((items) => setImages(items));
-            })
-            .catch((error) => console.error(error))
-            .catch((error) => console.error(error));
+        const loadImages = async () => {
+            const listResult = await listAll(listRef);
+
+            const allImages = await Promise.all(
+                listResult.items.map((item) => getDownloadURL(item))
+            );
+            setImages(allImages);
+        };
+
+        loadImages().catch((err) => console.error(err));
     }, []);
+
+    useEffect(() => {
+        const maxIndex = images.length - 1;
+
+        const timeoutHandle = setTimeout(() => {
+            setIndex((prevIndex) => {
+                return prevIndex === maxIndex ? 0 : prevIndex + 1;
+            });
+        }, 6000);
+
+        return () => {
+            window.clearTimeout(timeoutHandle);
+        };
+    }, [images, index]);
 
     return (
         <BorderDiv className="card">
-            <HeadshotImg src={images[0]} alt={images[0]}></HeadshotImg>
+            <HeadshotImg src={images[index]} alt={images[index]}></HeadshotImg>
+            <SlideshowDotsDiv>
+                {images.map((_, idx) => (
+                    <SlideshowDot
+                        key={idx}
+                        selected={idx === index}
+                        onClick={() => setIndex(idx)}
+                    ></SlideshowDot>
+                ))}
+            </SlideshowDotsDiv>
         </BorderDiv>
     );
 };
