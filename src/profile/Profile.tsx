@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { ImageCard } from "./ImageCard";
 import { SocialDisplays } from "./SocialsDisplay";
-const headshot = require("./Headshot.jpg");
 
 const DisplayDiv = styled.div<{
     overflow: boolean;
@@ -99,7 +98,7 @@ export const Profile: FC = () => {
                     <SocialDisplays></SocialDisplays>
                 </SocialsDiv>
             </TextDiv>
-            <ImageCard src={headshot} alt="headshot"></ImageCard>
+            <ImageCard></ImageCard>
         </DisplayDiv>
     );
 };
