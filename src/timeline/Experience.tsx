@@ -4,12 +4,12 @@ enum ExperienceType {
 }
 
 export type Experience = {
-    type: ExperienceType;
-    org: string;
+    org?: string;
     title: string;
     description: string;
     startDate: Date;
     endDate: Date;
+    link?: string;
 };
 
 export const asExperience = (data: any) => {

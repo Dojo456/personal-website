@@ -7,7 +7,9 @@ import { ExperienceList } from "./ExperienceList";
 
 const DisplayDiv = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
     min-height: 100vh;
     width: 100%;
     padding: 20px;
@@ -33,16 +35,6 @@ export const Timeline: FC = () => {
     }, []);
 
     console.log(experiences);
-
-    useEffect(() => {
-        fetch("https://api.github.com/users/Dojo456/repos")
-            .then((resp) => {
-                resp.json().then((resp) => {
-                    console.log(resp);
-                });
-            })
-            .catch((err) => console.error(err));
-    }, []);
 
     return (
         <DisplayDiv>
