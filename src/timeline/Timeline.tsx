@@ -7,9 +7,7 @@ import { ExperienceList } from "./ExperienceList";
 
 const DisplayDiv = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 50px;
+    justify-content: center;
     min-height: 100vh;
     width: 100%;
     padding: 20px;
