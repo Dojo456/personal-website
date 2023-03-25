@@ -2,13 +2,15 @@ import { collection, getDocs } from "firebase/firestore";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import * as firebase from "../firebase";
-import { Experience, ExperienceDisplay } from "./Experience";
+import { asExperience, Experience } from "./Experience";
+import { ExperienceList } from "./ExperienceList";
 
 const DisplayDiv = styled.div`
     display: flex;
     justify-content: center;
     min-height: 100vh;
     width: 100%;
+    padding: 20px;
 `;
 
 export const Timeline: FC = () => {
@@ -17,8 +19,8 @@ export const Timeline: FC = () => {
     useEffect(() => {
         getDocs(collection(firebase.firestore, "experiences"))
             .then((querySnapshot) => {
-                const allExperiences = querySnapshot.docs.map(
-                    (snapshot) => snapshot.data() as Experience
+                const allExperiences = querySnapshot.docs.map((snapshot) =>
+                    asExperience(snapshot.data())
                 );
 
                 allExperiences.sort(
@@ -44,12 +46,7 @@ export const Timeline: FC = () => {
 
     return (
         <DisplayDiv>
-            {experiences.map((experience, idx) => (
-                <ExperienceDisplay
-                    key={idx}
-                    experience={experience}
-                ></ExperienceDisplay>
-            ))}
+            <ExperienceList experiences={experiences}></ExperienceList>
         </DisplayDiv>
     );
 };

@@ -1,5 +1,3 @@
-import { FC } from "react";
-
 enum ExperienceType {
     Work,
     Education,
@@ -9,14 +7,16 @@ export type Experience = {
     type: ExperienceType;
     org: string;
     title: string;
+    description: string;
     startDate: Date;
     endDate: Date;
 };
 
-interface ExperienceDisplayProps {
-    experience: Experience;
-}
+export const asExperience = (data: any) => {
+    const exp = data as Experience;
 
-export const ExperienceDisplay: FC<ExperienceDisplayProps> = (props) => {
-    return <>{JSON.stringify(props.experience)}</>;
+    exp.endDate = data.endDate.toDate();
+    exp.startDate = data.startDate.toDate();
+
+    return exp;
 };
