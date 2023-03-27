@@ -1,41 +1,40 @@
-import { collection, getDocs } from "firebase/firestore";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import * as firebase from "../firebase";
-import { asExperience, Experience } from "./Experience";
+import { Experience, ExperienceFetcher, ExperienceType } from "./Experience";
 import { ExperienceList } from "./ExperienceList";
+import { ExperienceTypeSelector } from "./ExperienceTypeSelector";
 
 const DisplayDiv = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     min-height: 100vh;
     width: 100%;
-    padding: 20px;
 `;
+
+const fetcher = new ExperienceFetcher();
 
 export const Timeline: FC = () => {
     const [experiences, setExperiences] = useState<Experience[]>([]);
+    const [selectedType, setSelectedType] = useState(ExperienceType.Work);
 
     useEffect(() => {
-        getDocs(collection(firebase.firestore, "experiences"))
-            .then((querySnapshot) => {
-                const allExperiences = querySnapshot.docs.map((snapshot) =>
-                    asExperience(snapshot.data())
-                );
-
-                allExperiences.sort(
-                    (a, b) => b.endDate.getTime() - a.endDate.getTime()
-                );
-
-                setExperiences(allExperiences);
-            })
-            .catch((reason) => console.error(reason));
-    }, []);
+        fetcher
+            .getExperiences(selectedType)
+            .then((value) => setExperiences(value))
+            .catch((err) => console.error(err));
+    }, [selectedType]);
 
     console.log(experiences);
 
     return (
         <DisplayDiv>
+            <ExperienceTypeSelector
+                selected={selectedType}
+                onChange={(type) => {
+                    setSelectedType(type);
+                }}
+            ></ExperienceTypeSelector>
             <ExperienceList experiences={experiences}></ExperienceList>
         </DisplayDiv>
     );

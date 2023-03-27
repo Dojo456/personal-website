@@ -6,6 +6,7 @@ import { ExperienceDisplay } from "./ExperienceDisplay";
 const LinedDiv = styled.div`
     background: linear-gradient(#000, #000) no-repeat center/3px 100%;
     width: 800px;
+    min-height: 200px;
 `;
 
 interface ExperienceListProps {
@@ -13,17 +14,9 @@ interface ExperienceListProps {
 }
 
 export const ExperienceList: FC<ExperienceListProps> = (props) => {
-    const exps = [];
-
-    for (let i = 0; i < 4; i++) {
-        if (props.experiences.length !== 0) {
-            exps.push(props.experiences[0]);
-        }
-    }
-
     return (
         <LinedDiv>
-            {exps.map((experience, idx) => (
+            {props.experiences.map((experience, idx) => (
                 <ExperienceDisplay
                     alignRight={idx % 2 === 0}
                     experience={experience}
