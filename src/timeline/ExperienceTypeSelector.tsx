@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { HasShadows } from "../common/styles";
 import { ExperienceType, ExperienceTypes } from "./Experience";
 
 const ContainerDiv = styled.div`
@@ -10,16 +11,18 @@ const ContainerDiv = styled.div`
     width: min-content;
 
     margin-bottom: 30px;
+
+    ${HasShadows}
 `;
 
-const ExperienceButton = styled.div<{ selected: boolean }>`
+const ExperienceButton = styled.button<{ selected: boolean }>`
     width: 150px;
     height: 50px;
     border: 1px black solid;
     background-color: ${(props) => (props.selected ? "#F6B222" : "white")};
     cursor: default;
     :hover {
-        background-color: ${(props) => (props.selected ? "#F6B222" : "grey")};
+        filter: brightness(${(props) => (props.selected ? "85%" : "60%")});
     }
 
     // Text styling

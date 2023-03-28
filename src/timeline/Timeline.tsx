@@ -10,6 +10,7 @@ const DisplayDiv = styled.div`
     align-items: center;
     min-height: 100vh;
     width: 100%;
+    padding-top: 20px;
 `;
 
 const fetcher = new ExperienceFetcher();
