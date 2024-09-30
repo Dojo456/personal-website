@@ -6,18 +6,18 @@ import * as firebase from "../firebase";
 
 const BorderDiv = styled.div`
     background-color: white;
-    width: 444px;
-    height: 538px;
+    max-width: min(90vh, 444px);
+    aspect-ratio: 0.82527881;
     margin: 10px;
     ${HasShadows}
 `;
 
 const HeadshotImg = styled.img`
     left: 0;
-    margin-left: 22px;
-    margin-top: 22px;
-    width: 400px;
-    height: 400px;
+    margin-left: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 74%;
 `;
 
 const SlideshowDotsDiv = styled.div`

@@ -1,22 +1,50 @@
-enum ExperienceType {
-    Work,
-    Education,
-}
+import { FC } from "react";
+import styled from "styled-components";
 
 export type Experience = {
-    type: ExperienceType;
-    org: string;
+    org?: string;
     title: string;
-    description: string;
     startDate: Date;
     endDate: Date;
+    link?: string;
 };
 
-export const asExperience = (data: any) => {
-    const exp = data as Experience;
+interface ExperienceDisplayProps {
+    experience: Experience;
+}
 
-    exp.endDate = data.endDate.toDate();
-    exp.startDate = data.startDate.toDate();
+const MainDiv = styled.div`
+    width: 200px;
+    border: 1px black solid;
+    background-color: white;
+    margin: 10px;
+    height: min-content;
+    > * {
+        margin: 0px;
+    }
+`;
 
-    return exp;
+function DateToString(date: Date) {
+    return new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        year: "numeric",
+    }).format(date);
+}
+
+export const ExperienceDisplay: FC<ExperienceDisplayProps> = (props) => {
+    const experience = props.experience;
+
+    return (
+        <a href={experience.link}>
+            <MainDiv>
+                <h1>
+                    {DateToString(experience.startDate) +
+                        " - " +
+                        DateToString(experience.endDate)}
+                </h1>
+                <h2>{experience.title}</h2>
+                <p>{experience.org}</p>
+            </MainDiv>
+        </a>
+    );
 };
