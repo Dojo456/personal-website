@@ -75,3 +75,6 @@ htmlcov/
 
 # Flask-specific
 instance/
+
+
+node_modules/

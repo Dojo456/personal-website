@@ -1,0 +1,85 @@
+@import "elements.css";
+
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    line-height: 1.4;
+    background-color: #FFFFE0; /* Light yellow background */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #00BFFF; /* Deep Sky Blue */
+    color: #FF1493; /* Deep Pink */
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 3px solid #FF00FF; /* Magenta border */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    display: block;
+    color: #FF00FF; /* Magenta */
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #FF00FF; /* Magenta */
+    text-decoration: none;
+    transform: scale(1.5);
+}
+
+main {
+    padding: 2rem;
+    border: 2px dashed #FF4500; /* Orange Red */
+    margin: 1rem;
+    box-sizing: border-box;
+    max-width: 100%;
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #00BFFF; /* Deep Sky Blue */
+    color: #FF1493; /* Deep Pink */
+    text-align: center;
+    padding: 1rem;
+    border-top: 3px solid #FF00FF; /* Magenta border */
+}
+
+/* New styles for early 2000s feel */
+h1, h2, h3 {
+    font-family: "Times New Roman", serif;
+    color: #8B008B; /* Dark Magenta */
+    text-shadow: 2px 2px #FFD700; /* Gold */
+}
+
+img {
+    border: 5px solid #4B0082; /* Indigo */
+    padding: 3px;
+}
+
+h1 {
+    white-space: nowrap;
+    overflow: hidden;
+}
