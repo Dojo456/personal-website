@@ -1,8 +1,14 @@
 {% extends "base.jinja" %}
 
-{% block title %}Blog{% endblock %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/pell/dist/pell.min.css">
+{% endblock %}
+
+{% block title %}New Blog Entry{% endblock %}
 
 {% block content %}
 <h1 class="p-0 text-4xl font-bold">Welcome to my blog!</h1>
 <p>I kinda just write random stuff that comes to my mind.</p>
+
+
 {% endblock %}

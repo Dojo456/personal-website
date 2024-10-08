@@ -14,19 +14,27 @@ document.addEventListener("keydown", function(event) {
 document.addEventListener("keydown", function(event) {
     if (event.altKey && event.key === "p") {
         searchForm.classList.remove("hidden");
+        searchInput.value = ""
         searchInput.focus();
     }
 });
 
+
 searchInput.addEventListener("input", function(event) {
     const term = event.target.value;
 
-    console.log(term)
-
-    if (term === "meowmeow") {
-        searchResults.innerHTML = "You found me!";
-    } else {
-        searchResults.innerHTML = ""
-    }
-
+    fetch(`/search?query=${term}`)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(result => {
+                const li = document.createElement("li");
+                li.innerHTML = result.description;
+                li.onclick = () => {
+                    window.location.href = result.url;
+                }
+                searchResults.appendChild(li);
+            });
+        }).catch(error => {
+            console.error("Error:", error);
+        });
 });
