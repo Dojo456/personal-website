@@ -4,11 +4,22 @@
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/pell/dist/pell.min.css">
 {% endblock %}
 
-{% block title %}New Blog Entry{% endblock %}
+{% block title %}Blog{% endblock %}
 
 {% block content %}
 <h1 class="p-0 text-4xl font-bold">Welcome to my blog!</h1>
-<p>I kinda just write random stuff that comes to my mind.</p>
+<p class="text-center">I kinda just write random stuff that comes to my mind.</p>
+
+
+{% for post in posts %}
+<hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+<div class="flex flex-col">
+    <p class="text-xs">{{ post.created.strftime("%B %d, %Y") }}</p>
+    <h2 class="text-2xl font-bold">{{ post.title }}</h2>
+    <br>
+    <div class="text-sm">{{ post.content | safe }}</div>
+</div>
+{% endfor %}
 
 
 {% endblock %}

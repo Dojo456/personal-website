@@ -3,10 +3,9 @@
     "tailwindcss": "^3.4.13"
   },
   "scripts": {
-    "build": "tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css --watch"
+    "build": "tailwindcss -i ./css/style.css -o ./dist/css/output.css --watch"
   },
   "dependencies": {
-    "firebase": "^10.14.0",
     "pell": "^1.0.6"
   },
   "type": "module"

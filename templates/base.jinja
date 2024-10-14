@@ -16,10 +16,15 @@
             <ul>
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('blog') }}">Blog</a></li>
-                {% if session.get("admin") %}
+                {% if session.get("user") %}
                 <li><a href="{{ url_for('new_blog') }}">New Blog</a></li>
                 {% endif %}
             </ul>
+            {% if session.get("user") %}
+            <form action="/logout" method="post">
+                <button id="logout-button">Logout</button>
+            </form>
+            {% endif %}
         </nav>
     </header>
     <main>
@@ -37,7 +42,7 @@
     <footer>
         <p>&copy; 2024 Daniel Liao. All rights reserved.</p>
     </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}" type="module"></script>
     {% block scripts %}{% endblock %}
 </body>
 

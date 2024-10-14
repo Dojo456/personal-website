@@ -9,9 +9,10 @@
 {% block content %}
 
 
-<form class="flex flex-col gap-4" action="{{ url_for('blog') }}" method="POST">
+<form class="flex flex-col gap-4" action="{{ url_for('new_blog') }}" method="POST">
+    <input type="text" name="title" placeholder="Title" required>
     <div id="editor" class="pell bg-white"></div>
-    <input type="hidden" name="entry" id="entry">
+    <input type="hidden" name="content" id="content">
     <button type="submit">Submit</button>
 </form>
 
@@ -19,5 +20,15 @@
 
 {% block scripts %}
 <script src="https://unpkg.com/pell"></script>
-<script src="{{ url_for('static', filename='js/blog.js') }}" type="module"></script>
+<script type="module">
+    // Initialize pell on an HTMLElement
+    pell.init({
+        // <HTMLElement>, required
+        element: document.getElementById('editor'),
+
+        // <Function>, required
+        // Use the output html, triggered by element's `oninput` event
+        onChange: html => document.getElementById('content').value = html,
+    })
+</script>
 {% endblock %}
