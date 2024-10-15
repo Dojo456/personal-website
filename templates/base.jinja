@@ -17,8 +17,11 @@
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('blog') }}">Blog</a></li>
                 {% if session.get("user") %}
-                <li><a href="{{ url_for('new_blog') }}">New Blog</a></li>
+                <li><a href="{{ url_for('new_post') }}">New Post</a></li>
                 {% endif %}
+                {% for additional_link in session.get("additional_links", []) %}
+                <li><a href="{{ additional_link[0] }}">{{ additional_link[1] }}</a></li>
+                {% endfor %}
             </ul>
             {% if session.get("user") %}
             <form action="/logout" method="post">

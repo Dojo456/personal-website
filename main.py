@@ -6,9 +6,20 @@ import firebase_admin
 import requests
 from dotenv import load_dotenv
 from firebase_admin import auth, firestore
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import (
+    Flask,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import LoginManager, UserMixin
 from jinja2 import FileSystemLoader, select_autoescape
+
+from utils import BlogInfo, requires_scope
 
 # Environment Setup
 load_dotenv()
@@ -50,8 +61,35 @@ def home():
     return render_template("home.jinja")
 
 
+all_blogs = [
+    ("/sabrina", "For Sabrina", "sabrina"),
+]
+
+
+alternate_titles = {
+    "sabrina": "Sabrina",
+}
+
+
 @app.route("/blog")
-def blog():
+@app.route("/blog/<topic>")
+def blog(topic: str | None = None):
+    blog_info: BlogInfo | None = None
+
+    if topic is None:
+        topic = "default"
+
+    if topic != "default":
+        if topic not in session.get("scopes", []):
+            return redirect(url_for("access", on_success=url_for("blog", topic=topic)))
+
+        blog_info_doc = db.collection("blogs").document(topic).get().to_dict()
+
+        if not blog_info_doc:
+            abort(404)
+
+        blog_info = BlogInfo(**blog_info_doc)
+
     page = request.args.get("page", 1, type=int)
     per_page = 5  # Number of blog posts per page
 
@@ -60,11 +98,17 @@ def blog():
     end = start + per_page
 
     # Query Firestore to get total count and paginated results
-    blog_ref = db.collection("blog")
+    blog_ref = db.collection("posts").where("topic", "==", topic)
+
     total_posts = len(blog_ref.get())
 
     # Order by creation date (descending) and limit to the current page
-    posts = blog_ref.order_by("created").offset(start).limit(per_page).stream()
+    posts = (
+        blog_ref.order_by("created", direction=firestore.firestore.Query.DESCENDING)
+        .offset(start)
+        .limit(per_page)
+        .stream()
+    )
 
     # Convert Firestore documents to dictionaries
     posts = [post.to_dict() for post in posts]
@@ -78,11 +122,14 @@ def blog():
         page=page,
         total_pages=total_pages,
         total_posts=total_posts,
+        current_topic=topic,
+        alt_title=blog_info["alt_title"] if blog_info else None,
+        alt_description=blog_info["alt_description"] if blog_info else None,
     )
 
 
 @app.route("/blog/new", methods=["GET", "POST"])
-def new_blog():
+def new_post():
     if not session.get("user"):
         return redirect(url_for("home"))
 
@@ -91,11 +138,15 @@ def new_blog():
 
         entry["created"] = firestore.firestore.SERVER_TIMESTAMP
 
-        db.collection("blog").add(entry)
+        db.collection("posts").add(entry)
 
-        return redirect(url_for("blog"))
+        topic = entry["topic"]
 
-    return render_template("new_blog.jinja")
+        return redirect(url_for("blog", topic=topic if topic != "default" else None))
+
+    topics = set(doc.id for doc in db.collection("blogs").stream())
+
+    return render_template("new_post.jinja", topics=list(topics))
 
 
 @app.route("/search")
@@ -110,6 +161,42 @@ def search():
         results = []
 
     return results
+
+
+@app.route("/access", methods=["GET", "POST"])
+def access():
+    if request.method == "POST":
+        access_code = request.form.get("access-code")
+        on_success = request.form.get("on_success", url_for("home"))
+
+        codes = (
+            db.collection("access_codes")
+            .where("code", "==", access_code)
+            .limit(1)
+            .get()
+        )
+
+        if len(codes) == 0:
+            return redirect(url_for("access"))
+
+        code = codes[0]
+
+        scopes = code.get("scopes")
+        session["scopes"] = scopes
+
+        # Fetch blogs where document ID is in scopes
+        blogs = db.collection("blogs").where("__name__", "in", scopes).stream()
+
+        additional_links = [
+            (f"/blog/{blog.id}", blog.get("link_title")) for blog in blogs
+        ]
+
+        session["additional_links"] = additional_links
+
+        return redirect(on_success)
+
+    on_success = request.args.get("on_success", url_for("home"))
+    return render_template("access.jinja", on_success=on_success)
 
 
 @app.route("/logout", methods=["POST"])

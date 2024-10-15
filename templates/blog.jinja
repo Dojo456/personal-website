@@ -7,8 +7,17 @@
 {% block title %}Blog{% endblock %}
 
 {% block content %}
+
+{% if alt_title %}
+<h1 class="p-0 text-4xl font-bold">{{ alt_title }}</h1>
+{% else %}
 <h1 class="p-0 text-4xl font-bold">Welcome to my blog!</h1>
+{% endif %}
+{% if alt_description %}
+<p class="text-center">{{ alt_description }}</p>
+{% else %}
 <p class="text-center">I kinda just write random stuff that comes to my mind.</p>
+{% endif %}
 
 
 {% for post in posts %}
