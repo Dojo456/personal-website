@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.13"
+  },
+  "scripts": {
+    "build": "tailwindcss -i ./css/style.css -o ./dist/css/output.css --watch"
+  },
+  "dependencies": {
+    "pell": "^1.0.6"
+  },
+  "type": "module"
+}

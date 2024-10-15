@@ -1,0 +1,102 @@
+@import "elements.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    line-height: 1.4;
+    background-color: #F5DEB3; /* Wheat */
+    color: #8B4513; /* Saddle Brown */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #D2691E; /* Chocolate */
+    color: #FFDAB9; /* Peach Puff */
+    padding: 1rem;
+    width: 200px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px;
+}
+
+nav ul li a {
+    color: #FFDAB9; /* Peach Puff */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+    color: #FFE4B5; /* Moccasin */
+}
+
+main {
+    background-color: #FFEFD5; /* Papaya Whip */
+    border: 2px solid #A0522D; /* Sienna */
+    margin: 1rem 220px;
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #D2691E; /* Chocolate */
+    color: #FFDAB9; /* Peach Puff */
+    padding: 1rem;
+    width: 200px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+/* Styles for early 2000s feel */
+h1, h2, h3 {
+    font-family: "Times New Roman", serif;
+    color: #8B4513; /* Saddle Brown */
+    text-align: center;
+}
+
+h1 {
+    font-size: 36px;
+    text-shadow: 2px 2px #DEB887; /* Burlywood */
+}
+
+img {
+    border: 5px solid #A0522D; /* Sienna */
+    padding: 3px;
+    background-color: #FFDAB9; /* Peach Puff */
+}
+
+/* Decorative elements */
+main::before, main::after {
+    content: "❀❀❀❀❀";
+    display: block;
+    text-align: center;
+    color: #CD853F; /* Peru */
+    font-size: 24px;
+    margin: 1rem 0;
+}

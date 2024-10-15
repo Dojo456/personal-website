@@ -1,0 +1,17 @@
+{% extends "base.jinja" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center">
+    <form id="login-form" class="flex flex-col gap-2 max-w-56" action="/login" method="POST">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
+        <button type="submit">Login</button>
+        <p id="error-message"></p>
+    </form>
+</div>
+
+{% endblock %}

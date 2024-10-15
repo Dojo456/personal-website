@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Personal Website{% endblock %}</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('blog') }}">Blog</a></li>
+                {% if session.get("user") %}
+                <li><a href="{{ url_for('new_post') }}">New Post</a></li>
+                {% endif %}
+                {% for additional_link in session.get("additional_links", []) %}
+                <li><a href="{{ additional_link[0] }}">{{ additional_link[1] }}</a></li>
+                {% endfor %}
+            </ul>
+            {% if session.get("user") %}
+            <form action="/logout" method="post">
+                <button id="logout-button">Logout</button>
+            </form>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <form id="search-form" class="search-form hidden" action="javascript:void(0);">
+            <label for="query">Search:</label>
+            <input type="text" id="query" name="query" placeholder="Search...">
+            <ul id="search-results">
+                {% for result in results %}
+                <li>{{ result }}</li>
+                {% endfor %}
+            </ul>
+        </form>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Daniel Liao. All rights reserved.</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}" type="module"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
