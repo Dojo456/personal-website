@@ -3,7 +3,8 @@
     "tailwindcss": "^3.4.13"
   },
   "scripts": {
-    "build": "tailwindcss -i ./css/style.css -o ./dist/css/output.css --watch"
+    "dev": "tailwindcss -i ./css/style.css -o ./dist/css/output.css --watch",
+    "build": "tailwindcss -i ./css/style.css -o ./dist/css/output.css --minify"
   },
   "dependencies": {
     "pell": "^1.0.6"
