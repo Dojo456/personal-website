@@ -1,14 +1,13 @@
 import base64
-from hashlib import sha256
 import html
-from urllib.parse import unquote
-import markdown
 import math
 import os
 import typing
 from datetime import datetime
 
 import firebase_admin
+import markdown
+import markdownify
 import requests
 from dotenv import load_dotenv
 from firebase_admin import auth, firestore
@@ -275,13 +274,14 @@ def projects():
 def project_details(project):
     if request.method == "POST":
         content = request.form.get("content")
+
         sha = request.form.get("sha")
 
         if not content:
             return redirect(url_for("project_details", project=project))
 
         response = requests.put(
-            f"https://api.github.com/repos/Dojo456/{project}/contents/readme",
+            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md",
             json={
                 "message": "[skip ci] Update README",
                 "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
@@ -297,7 +297,7 @@ def project_details(project):
     try:
         # Fetch README content from GitHub API
         response = requests.get(
-            f"https://api.github.com/repos/Dojo456/{project}/contents/readme"
+            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md"
         )
 
         if response.status_code == 404:
@@ -313,12 +313,10 @@ def project_details(project):
                 base64.b64decode(content["content"]).decode("utf-8")
             )
             sha = content["sha"]
-        # Convert markdown to HTML
-        html_content = markdown.markdown(readme_content)
         return render_template(
             "project_details.jinja",
             project_name=project,
-            readme_content=html_content,
+            readme_content=readme_content,
             sha=sha,
         )
     except Exception as e:
