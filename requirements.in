@@ -2,5 +2,3 @@ Flask
 python-dotenv
 firebase-admin
 flask-login
-markdown
-markdownify
