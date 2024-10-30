@@ -21,3 +21,7 @@
 .ignore-css{
     all:unset;
 }
+
+.pell-content {
+    min-height: 30rem;
+}

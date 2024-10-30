@@ -6,8 +6,6 @@ import typing
 from datetime import datetime
 
 import firebase_admin
-import markdown
-import markdownify
 import requests
 from dotenv import load_dotenv
 from firebase_admin import auth, firestore
@@ -286,6 +284,7 @@ def project_details(project):
                 "message": "[skip ci] Update README",
                 "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
                 "sha": sha,
+                "branch": "development",
             },
             headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
         )
@@ -297,7 +296,7 @@ def project_details(project):
     try:
         # Fetch README content from GitHub API
         response = requests.get(
-            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md"
+            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md?ref=development"
         )
 
         if response.status_code == 404:
