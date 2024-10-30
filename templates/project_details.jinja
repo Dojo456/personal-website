@@ -27,7 +27,7 @@
 
     <div id="edit-mode" class="hidden">
         <div id="editor" class="pell bg-white"></div>
-        <form method="POST" class="mt-4 flex gap-2">
+        <form method="POST" class="mt-4 flex gap-2" id="edit-form">
             <input type="hidden" id="content" name="content">
             <input type="hidden" id="sha" name="sha" value="{{ sha }}">
             <button type="submit" id="save-button" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
@@ -48,6 +48,7 @@
     const saveButton = document.getElementById('save-button');
     const cancelButton = document.getElementById('cancel-button');
     const content = document.getElementById('content');
+    const editForm = document.getElementById('edit-form');
 
     const initialContent = `{{ readme_content | safe }}`;
 
@@ -58,14 +59,29 @@
 
     editButton.addEventListener('click', () => {
         editor.content.innerHTML = initialContent;
+        content.value = initialContent;
 
         viewMode.classList.add('hidden');
         editMode.classList.remove('hidden');
     });
 
-    cancelButton.addEventListener('click', () => {
+    const cancelEdit = () => {
         viewMode.classList.remove('hidden');
         editMode.classList.add('hidden');
+    }
+
+    editForm.addEventListener('submit', (event) => {
+        if (content.value === initialContent) {
+            event.preventDefault();
+            event.stopPropagation();
+            cancelEdit();
+            return;
+        }
+    });
+
+    cancelButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        cancelEdit();
     });
 </script>
 {% endif %}

@@ -273,7 +273,7 @@ def projects():
 @app.route("/projects/<project>", methods=["GET", "POST"])
 def project_details(project):
     if request.method == "POST":
-        content = markdownify.markdownify(request.form.get("content"))
+        content = request.form.get("content")
 
         sha = request.form.get("sha")
 
@@ -313,12 +313,10 @@ def project_details(project):
                 base64.b64decode(content["content"]).decode("utf-8")
             )
             sha = content["sha"]
-        # Convert markdown to HTML
-        html_content = markdown.markdown(readme_content)
         return render_template(
             "project_details.jinja",
             project_name=project,
-            readme_content=html_content,
+            readme_content=readme_content,
             sha=sha,
         )
     except Exception as e:
