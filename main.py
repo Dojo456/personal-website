@@ -18,6 +18,7 @@ from flask import (
 )
 from flask_login import LoginManager, UserMixin
 from jinja2 import FileSystemLoader, select_autoescape
+from datetime import datetime
 
 from utils import BlogInfo, requires_scope
 
@@ -224,6 +225,35 @@ def login():
             return redirect(url_for("login"))
 
     return render_template("login.jinja")
+
+
+@app.route("/projects")
+def projects():
+    # Replace with your GitHub username
+    username = "Dojo456"
+
+    try:
+        response = requests.get(f"https://api.github.com/users/{username}/repos")
+        if response.ok:
+            projects = response.json()
+            # Sort projects by stars
+            projects.sort(key=lambda x: x.get('stargazers_count', 0), reverse=True)
+            
+            # Clean up project data
+            formatted_projects = [{
+                'name': project['name'],
+                'description': project.get('description', 'No description available'),
+                'stars': project['stargazers_count'],
+                'forks': project['forks_count'],
+                'language': project.get('language', 'N/A'),
+                'url': project['html_url'],
+                'updated_at': datetime.strptime(project['updated_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%B %d, %Y'),
+            } for project in projects]
+            
+            return render_template('projects.jinja', projects=formatted_projects)
+    except Exception as e:
+        flash(f"Error fetching projects: {str(e)}", 'error')
+        return render_template('projects.jinja', projects=[])
 
 
 if __name__ == "__main__":

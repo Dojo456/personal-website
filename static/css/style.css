@@ -100,3 +100,66 @@ main::before, main::after {
     font-size: 24px;
     margin: 1rem 0;
 }
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.project-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-title {
+    color: #0366d6;
+    margin: 0 0 10px 0;
+}
+
+.project-description {
+    color: #586069;
+    margin-bottom: 15px;
+}
+
+.project-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.9em;
+    color: #586069;
+}
+
+.project-updated {
+    font-size: 0.8em;
+    color: #666;
+    margin: 10px 0;
+}
+
+.project-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #0366d6;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.project-link:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}

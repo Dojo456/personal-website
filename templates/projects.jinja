@@ -1,0 +1,27 @@
+{% extends "base.jinja" %}
+
+{% block content %}
+<div class="container">
+    <h1>My GitHub Projects</h1>
+    
+    <div class="projects-grid">
+        {% for project in projects %}
+            <div class="project-card">
+                <h3 class="project-title">{{ project.name }}</h3>
+                <p class="project-description">{{ project.description }}</p>
+                <div class="project-meta">
+                    <span>⭐ {{ project.stars }}</span>
+                    <span>🔄 {{ project.forks }}</span>
+                    <span>{{ project.language }}</span>
+                </div>
+                <div class="project-updated">
+                    Last updated: {{ project.updated_at }}
+                </div>
+                <a href="{{ project.url }}" class="project-link" target="_blank">View Project</a>
+            </div>
+        {% else %}
+            <p>No projects found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
