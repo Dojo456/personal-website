@@ -1,6 +1,7 @@
 import math
 import os
 import typing
+from datetime import datetime
 
 import firebase_admin
 import requests
@@ -16,10 +17,10 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, login_user, logout_user
 from jinja2 import FileSystemLoader, select_autoescape
 
-from utils import BlogInfo, requires_scope
+from utils import BlogInfo
 
 # Environment Setup
 load_dotenv()
@@ -47,6 +48,9 @@ app.jinja_env.autoescape = select_autoescape(["html", "xml", "jinja"])
 class User(UserMixin):
     def __init__(self, record: auth.UserRecord):
         self.record = record
+
+    def get_id(self):
+        return str(self.record.uid)
 
 
 @login_manager.user_loader
@@ -201,7 +205,7 @@ def access():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    session.pop("user", None)
+    logout_user()
     return redirect(url_for("home"))
 
 
@@ -217,13 +221,57 @@ def login():
         )
 
         if resp.ok:
-            session["user"] = resp.json()
+            user = resp.json()
+
+            login_user(User(auth.get_user(user["localId"])), remember=True)
 
             return redirect(url_for("home"))
         else:
+            flash(resp.text, "error")
+            print(resp.text)
+
             return redirect(url_for("login"))
 
     return render_template("login.jinja")
+
+
+@app.route("/projects")
+def projects():
+    username = "Dojo456"
+
+    e = None
+
+    try:
+        response = requests.get(f"https://api.github.com/users/{username}/repos")
+        if response.ok:
+            projects = response.json()
+            # Sort projects by stars
+            projects.sort(key=lambda x: x.get("stargazers_count", 0), reverse=True)
+
+            # Clean up project data
+            formatted_projects = [
+                {
+                    "name": project["name"],
+                    "description": project.get(
+                        "description", "No description available"
+                    ),
+                    "stars": project["stargazers_count"],
+                    "forks": project["forks_count"],
+                    "language": project.get("language", "N/A"),
+                    "url": project["html_url"],
+                    "updated_at": datetime.strptime(
+                        project["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
+                    ).strftime("%B %d, %Y"),
+                }
+                for project in projects
+            ]
+
+            return render_template("projects.jinja", projects=formatted_projects)
+    except Exception as exp:
+        e = exp
+
+    flash(f"Error fetching projects: {str(e)}", "error")
+    return render_template("projects.jinja", projects=[])
 
 
 if __name__ == "__main__":
