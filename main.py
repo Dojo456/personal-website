@@ -1,14 +1,12 @@
 import base64
-from hashlib import sha256
 import html
-from urllib.parse import unquote
-import markdown
 import math
 import os
 import typing
 from datetime import datetime
 
 import firebase_admin
+import markdown
 import requests
 from dotenv import load_dotenv
 from firebase_admin import auth, firestore
