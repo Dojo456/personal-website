@@ -4,6 +4,8 @@
 #
 #    pip-compile
 #
+beautifulsoup4==4.12.3
+    # via markdownify
 blinker==1.8.2
     # via flask
 cachecontrol==0.14.0
@@ -85,6 +87,8 @@ jinja2==3.1.4
     # via flask
 markdown==3.7
     # via -r requirements.in
+markdownify==0.13.1
+    # via -r requirements.in
 markupsafe==2.1.5
     # via
     #   jinja2
@@ -123,6 +127,10 @@ requests==2.32.3
     #   google-cloud-storage
 rsa==4.9
     # via google-auth
+six==1.16.0
+    # via markdownify
+soupsieve==2.6
+    # via beautifulsoup4
 uritemplate==4.1.1
     # via google-api-python-client
 urllib3==2.2.3
