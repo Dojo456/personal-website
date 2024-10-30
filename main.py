@@ -1,3 +1,8 @@
+import base64
+from hashlib import sha256
+import html
+from urllib.parse import unquote
+import markdown
 import math
 import os
 import typing
@@ -239,39 +244,86 @@ def login():
 def projects():
     username = "Dojo456"
 
-    e = None
+    response = requests.get(f"https://api.github.com/users/{username}/repos")
+    if not response.ok:
+        abort(500)
+
+    projects = response.json()
+    # Sort projects by stars
+    projects.sort(key=lambda x: x.get("stargazers_count", 0), reverse=True)
+
+    # Clean up project data
+    formatted_projects = [
+        {
+            "name": project["name"],
+            "description": project.get("description", "No description available"),
+            "stars": project["stargazers_count"],
+            "forks": project["forks_count"],
+            "language": project.get("language", "N/A"),
+            "url": project["html_url"],
+            "updated_at": datetime.strptime(
+                project["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
+            ).strftime("%B %d, %Y"),
+        }
+        for project in projects
+    ]
+
+    return render_template("projects.jinja", projects=formatted_projects)
+
+
+@app.route("/projects/<project>", methods=["GET", "POST"])
+def project_details(project):
+    if request.method == "POST":
+        content = request.form.get("content")
+        sha = request.form.get("sha")
+
+        if not content:
+            return redirect(url_for("project_details", project=project))
+
+        response = requests.put(
+            f"https://api.github.com/repos/Dojo456/{project}/contents/readme",
+            json={
+                "message": "[skip ci] Update README",
+                "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+                "sha": sha,
+            },
+            headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
+        )
+
+        print(response.text)
+
+        return redirect(url_for("project_details", project=project))
 
     try:
-        response = requests.get(f"https://api.github.com/users/{username}/repos")
-        if response.ok:
-            projects = response.json()
-            # Sort projects by stars
-            projects.sort(key=lambda x: x.get("stargazers_count", 0), reverse=True)
+        # Fetch README content from GitHub API
+        response = requests.get(
+            f"https://api.github.com/repos/Dojo456/{project}/contents/readme"
+        )
 
-            # Clean up project data
-            formatted_projects = [
-                {
-                    "name": project["name"],
-                    "description": project.get(
-                        "description", "No description available"
-                    ),
-                    "stars": project["stargazers_count"],
-                    "forks": project["forks_count"],
-                    "language": project.get("language", "N/A"),
-                    "url": project["html_url"],
-                    "updated_at": datetime.strptime(
-                        project["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
-                    ).strftime("%B %d, %Y"),
-                }
-                for project in projects
-            ]
+        if response.status_code == 404:
+            readme_content = "I haven't written a README for this project yet."
+            sha = None
+        elif not response.ok:
+            abort(500)
+        else:
+            content = response.json()
 
-            return render_template("projects.jinja", projects=formatted_projects)
-    except Exception as exp:
-        e = exp
-
-    flash(f"Error fetching projects: {str(e)}", "error")
-    return render_template("projects.jinja", projects=[])
+            # Decode content from base64
+            readme_content = html.unescape(
+                base64.b64decode(content["content"]).decode("utf-8")
+            )
+            sha = content["sha"]
+        # Convert markdown to HTML
+        html_content = markdown.markdown(readme_content)
+        return render_template(
+            "project_details.jinja",
+            project_name=project,
+            readme_content=html_content,
+            sha=sha,
+        )
+    except Exception as e:
+        flash(f"Error fetching README: {str(e)}", "error")
+        return redirect(url_for("projects"))
 
 
 if __name__ == "__main__":

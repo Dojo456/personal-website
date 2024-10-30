@@ -19,6 +19,7 @@ body {
     padding: 0;
     display: flex;
     min-height: 100vh;
+    scrollbar-gutter: stable both-edges;
 }
 
 header {
@@ -113,11 +114,12 @@ main::before, main::after {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    height: 100%;
 }
 
 .project-card:hover {
     transform: translateY(-5px);
+    transition: transform 0.2s ease;
 }
 
 .project-title {
@@ -162,4 +164,15 @@ main::before, main::after {
     .projects-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.project-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: contents;
+}
+
+.project-card-link:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
 }
