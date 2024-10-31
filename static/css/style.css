@@ -171,3 +171,10 @@ main::before, main::after {
 .ck-editor__editable {
     max-height: 400px;
 }
+
+pre {
+    overflow-x: auto;
+    border: 1px solid #A0522D; /* Sienna */
+    padding: 10px;
+    border-radius: 5px;
+}

@@ -284,7 +284,6 @@ def project_details(project):
                 "message": "[skip ci] Update README",
                 "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
                 "sha": sha,
-                "branch": "development",
             },
             headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
         )
