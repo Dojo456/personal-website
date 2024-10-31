@@ -5,6 +5,7 @@ export default {
         ".././static/js/**/*.js",
         "./templates/**/*.jinja",
         "./static/js/**/*.js",
+        "./templates/*.jinja",
     ],
     theme: {
         extend: {},

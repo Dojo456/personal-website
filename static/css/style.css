@@ -59,7 +59,7 @@ main {
     border: 2px solid #A0522D; /* Sienna */
     margin: 1rem 220px;
     padding: 1rem;
-    flex-grow: 1;
+    width: calc(100% - 440px);
 }
 
 footer {
@@ -115,6 +115,7 @@ main::before, main::after {
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     height: 100%;
+    display: block;
 }
 
 .project-card:hover {
@@ -166,13 +167,7 @@ main::before, main::after {
     }
 }
 
-.project-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: contents;
-}
 
-.project-card-link:hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease;
+.ck-editor__editable {
+    max-height: 400px;
 }

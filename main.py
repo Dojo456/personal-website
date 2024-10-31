@@ -19,7 +19,7 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import LoginManager, UserMixin, login_user, logout_user
+from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from jinja2 import FileSystemLoader, select_autoescape
 
 from utils import BlogInfo
@@ -136,7 +136,7 @@ def blog(topic: str | None = None):
 
 @app.route("/blog/new", methods=["GET", "POST"])
 def new_post():
-    if not session.get("user"):
+    if not current_user.is_authenticated:
         return redirect(url_for("home"))
 
     if request.method == "POST":
