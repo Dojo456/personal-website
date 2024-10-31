@@ -1,29 +1,36 @@
 {% extends "base.jinja" %}
 
-{% block content %}
-<div class="container">
-    <h1>My GitHub Projects</h1>
+{% block title %}Projects{% endblock %}
 
-    <div class="projects-grid">
-        {% for project in projects %}
-        <a href="{{ url_for('project_details', project=project.name) }}" class="project-card-link">
-            <div class="project-card">
-                <h3 class="project-title">{{ project.name }}</h3>
-                <p class="project-description">{{ project.description }}</p>
-                <div class="project-meta">
-                    <span>⭐ {{ project.stars }}</span>
-                    <span>🔄 {{ project.forks }}</span>
-                    <span>{{ project.language }}</span>
-                </div>
-                <div class="project-updated">
-                    Last updated: {{ project.updated_at }}
-                </div>
-                <a href="{{ project.url }}" class="project-link" target="_blank">View On GitHub</a>
-            </div>
-        </a>
-        {% else %}
-        <p>No projects found.</p>
-        {% endfor %}
-    </div>
+{% block content %}
+<h1 class="text-4xl font-bold">My GitHub Projects</h1>
+
+<div class="projects-grid">
+    {% for project in projects %}
+    <a href="{{ url_for('project_details', project=project.name) }}" class="project-card">
+        <h3 class="project-title">{{ project.name }}</h3>
+        <p class="project-description">{{ project.description }}</p>
+        <div class="project-meta">
+            <span>⭐ {{ project.stars }}</span>
+            <span>🔄 {{ project.forks }}</span>
+            <span>{{ project.language }}</span>
+        </div>
+        <div class="project-updated">
+            Last updated: {{ project.updated_at }}
+        </div>
+        <button class="project-link" onclick="openProject(event, '{{ project.url }}')">View On GitHub</button>
+    </a>
+    {% else %}
+    <p>No projects found.</p>
+    {% endfor %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openProject(event, url) {
+        event.preventDefault();
+        window.open(url, '_blank');
+    }
+</script>
 {% endblock %}

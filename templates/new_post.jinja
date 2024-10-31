@@ -9,7 +9,7 @@
 {% block content %}
 
 
-<form class="flex flex-col gap-4" action="{{ url_for('new_post') }}" method="POST">
+<form id="new-post-form" class="flex flex-col gap-4" action="{{ url_for('new_post') }}" method="POST">
     <input type="text" name="title" placeholder="Title" required>
     <input type="hidden" name="topic" id="topic" value="default" />
     <select id="topic-select" required>
@@ -20,7 +20,7 @@
         <option value="other">Other</option>
     </select>
     <input class="hidden" type="text" id="topic-text" />
-    <div id="editor" class="pell bg-white"></div>
+    <div id="editor"></div>
     <input type="hidden" name="content" id="content">
     <button type="submit">Submit</button>
 </form>
@@ -28,17 +28,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://unpkg.com/pell"></script>
 <script type="module">
-    // Initialize pell on an HTMLElement
-    pell.init({
-        // <HTMLElement>, required
-        element: document.getElementById('editor'),
+    import { createEditor } from "{{ url_for('static', filename='js/script.js') }}";
 
-        // <Function>, required
-        // Use the output html, triggered by element's `oninput` event
-        onChange: html => document.getElementById('content').value = html,
-    })
+    const editor = createEditor(document.getElementById('editor'));
 
     document.getElementById('topic-select').addEventListener('change', function (event) {
         if (event.target.value === 'other') {
@@ -51,6 +44,10 @@
 
     document.getElementById('topic-text').addEventListener('change', function (event) {
         document.getElementById('topic').value = event.target.value;
+    });
+
+    document.getElementById('new-post-form').addEventListener('submit', function (event) {
+        document.getElementById('content').value = editor.getData();
     });
 </script>
 {% endblock %}

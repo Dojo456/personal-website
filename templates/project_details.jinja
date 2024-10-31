@@ -4,85 +4,99 @@
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/pell/dist/pell.min.css">
 {% endblock %}
 
+{% block title %}
+{{ project_name }}
+{% endblock %}
+
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8 ">
-        <h1 class="text-3xl font-bold mb-2">{{ project_name }}</h1>
-
-        <div class="flex justify-between">
-            <a href="{{ url_for('projects') }}" class="text-blue-500 hover:text-blue-700">
-                ← Back to Projects
-            </a>
-            {% if current_user.is_authenticated %}
-            <button id="edit-button" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded">Edit README</button>
-            {% endif %}
-        </div>
-    </div>
-
-    <div id="view-mode" class="prose prose-lg max-w-none">
-        {{ readme_content | safe }}
-    </div>
-
+<div class="flex justify-between">
+    <a href="{{ url_for('projects') }}" class="text-blue-500 hover:text-blue-700">
+        ← Back to Projects
+    </a>
     {% if current_user.is_authenticated %}
-
-    <div id="edit-mode" class="hidden">
-        <div id="editor" class="pell bg-white"></div>
-        <form method="POST" class="mt-4 flex gap-2" id="edit-form">
-            <input type="hidden" id="content" name="content">
-            <input type="hidden" id="sha" name="sha" value="{{ sha }}">
-            <button type="submit" id="save-button" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-            <button id="cancel-button" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-        </form>
-    </div>
+    <button id="edit-button" class="ml-4 bg-blue-500 text-white px-4 py-2 w-32 rounded">Edit README</button>
+    <button id="top-cancel-button" class="ml-4 bg-gray-500 text-white px-4 py-2 w-32 rounded hidden">Cancel</button>
     {% endif %}
+</div>
+
+<div id="view-mode">
+    {{ readme_content | safe }}
+</div>
+
+{% if current_user.is_authenticated %}
+
+<div id="edit-mode" class="hidden">
+    <div id="editor"></div>
+    <form method="POST" class="mt-4 flex gap-2" id="edit-form">
+        <input type="hidden" id="content" name="content">
+        <input type="hidden" id="sha" name="sha" value="{{ sha }}">
+        <button type="submit" id="save-button" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+        <button id="cancel-button" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+    </form>
+</div>
+{% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
 {% if current_user.is_authenticated %}
-<script src="https://unpkg.com/pell"></script>
-<script>
+<script type="module">
+    import { createEditor } from "{{ url_for('static', filename='js/script.js') }}";
+
     const viewMode = document.getElementById('view-mode');
     const editMode = document.getElementById('edit-mode');
     const editButton = document.getElementById('edit-button');
     const saveButton = document.getElementById('save-button');
     const cancelButton = document.getElementById('cancel-button');
-    const content = document.getElementById('content');
+    const topCancelButton = document.getElementById('top-cancel-button');
     const editForm = document.getElementById('edit-form');
 
     const initialContent = `{{ readme_content | safe }}`;
 
-    const editor = pell.init({
-        element: document.getElementById('editor'),
-        onChange: html => content.value = html,
-    });
+    const editor = createEditor(document.getElementById('editor'));
 
-    editButton.addEventListener('click', () => {
-        editor.content.innerHTML = initialContent;
-        content.value = initialContent;
+    editor.then(editor => {
+        editButton.addEventListener('click', () => {
+            editor.setData(initialContent);
 
-        viewMode.classList.add('hidden');
-        editMode.classList.remove('hidden');
-    });
+            viewMode.classList.add('hidden');
+            editMode.classList.remove('hidden');
 
-    const cancelEdit = () => {
-        viewMode.classList.remove('hidden');
-        editMode.classList.add('hidden');
-    }
+            editButton.classList.add('hidden');
+            topCancelButton.classList.remove('hidden');
+        });
 
-    editForm.addEventListener('submit', (event) => {
-        if (content.value === initialContent) {
-            event.preventDefault();
-            event.stopPropagation();
-            cancelEdit();
-            return;
+        const cancelEdit = () => {
+            viewMode.classList.remove('hidden');
+            editMode.classList.add('hidden');
+
+            editButton.classList.remove('hidden');
+            topCancelButton.classList.add('hidden');
         }
+
+        editForm.addEventListener('submit', (event) => {
+            content.value = editor.getData();
+
+            if (content.value === initialContent) {
+                event.preventDefault();
+                event.stopPropagation();
+                cancelEdit();
+                return;
+            }
+        });
+
+        cancelButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            cancelEdit();
+        });
+
+        topCancelButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            cancelEdit();
+        });
     });
 
-    cancelButton.addEventListener('click', (event) => {
-        event.preventDefault();
-        cancelEdit();
-    });
+
 </script>
 {% endif %}
 {% endblock %}
