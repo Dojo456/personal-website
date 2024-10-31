@@ -22,6 +22,14 @@
     all:unset;
 }
 
-.pell-content {
-    min-height: 30rem;
+#view-mode h1 {
+    font-size: 32px;
+}
+
+#view-mode h2 {
+    font-size: 24px;
+}
+
+#view-mode h3 {
+    font-size: 16px;
 }

@@ -288,14 +288,12 @@ def project_details(project):
             headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
         )
 
-        print(response.text)
-
         return redirect(url_for("project_details", project=project))
 
     try:
         # Fetch README content from GitHub API
         response = requests.get(
-            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md?ref=development"
+            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md"
         )
 
         if response.status_code == 404:

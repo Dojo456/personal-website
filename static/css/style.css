@@ -11,10 +11,10 @@ html, body {
 }
 
 body {
-    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
     line-height: 1.4;
-    background-color: #F5DEB3; /* Wheat */
-    color: #8B4513; /* Saddle Brown */
+    background: #008080;
+    color: #000000;
     margin: 0;
     padding: 0;
     display: flex;
@@ -23,8 +23,8 @@ body {
 }
 
 header {
-    background-color: #D2691E; /* Chocolate */
-    color: #FFDAB9; /* Peach Puff */
+    background: #C0C0C0;
+    color: black;
     padding: 1rem;
     width: 200px;
     position: fixed;
@@ -32,6 +32,10 @@ header {
     top: 0;
     bottom: 0;
     overflow-y: auto;
+    border-right: 2px solid #DFDFDF;
+    border-left: 2px solid #808080;
+    border-top: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
 }
 
 nav ul {
@@ -44,27 +48,35 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #FFDAB9; /* Peach Puff */
+    color: black;
     text-decoration: none;
-    font-weight: bold;
+    padding: 4px 8px;
+    display: block;
+    border: 2px solid #C0C0C0;
 }
 
 nav ul li a:hover {
-    text-decoration: underline;
-    color: #FFE4B5; /* Moccasin */
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    background: #C0C0C0;
 }
 
 main {
-    background-color: #FFEFD5; /* Papaya Whip */
-    border: 2px solid #A0522D; /* Sienna */
+    background-color: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
     margin: 1rem 220px;
     padding: 1rem;
     width: calc(100% - 440px);
 }
 
 footer {
-    background-color: #D2691E; /* Chocolate */
-    color: #FFDAB9; /* Peach Puff */
+    background: #C0C0C0;
+    color: black;
     padding: 1rem;
     width: 200px;
     position: fixed;
@@ -72,34 +84,32 @@ footer {
     top: 0;
     bottom: 0;
     overflow-y: auto;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #DFDFDF;
+    border-top: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
 }
 
 /* Styles for early 2000s feel */
 h1, h2, h3 {
-    font-family: "Times New Roman", serif;
-    color: #8B4513; /* Saddle Brown */
-    text-align: center;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    color: #000000;
+    text-align: left;
+    margin: 8px 0;
+    text-shadow: none;
 }
 
-h1 {
-    font-size: 36px;
-    text-shadow: 2px 2px #DEB887; /* Burlywood */
+.beveled {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 2px;
+    background-color: #C0C0C0;
 }
 
-img {
-    border: 5px solid #A0522D; /* Sienna */
-    padding: 3px;
-    background-color: #FFDAB9; /* Peach Puff */
-}
-
-/* Decorative elements */
-main::before, main::after {
-    content: "❀❀❀❀❀";
-    display: block;
-    text-align: center;
-    color: #CD853F; /* Peru */
-    font-size: 24px;
-    margin: 1rem 0;
+input[type="password"] {
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
 }
 
 .projects-grid {
@@ -110,41 +120,46 @@ main::before, main::after {
 }
 
 .project-card {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    height: 100%;
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    padding: 12px;
+    margin-bottom: 12px;
     display: block;
+    height: auto;
+    box-shadow: none;
+    transform: none;
+    transition: none;
 }
 
 .project-card:hover {
-    transform: translateY(-5px);
-    transition: transform 0.2s ease;
+    transform: none;
+    transition: none;
 }
 
 .project-title {
-    color: #0366d6;
-    margin: 0 0 10px 0;
+    color: #000000;
+    font-weight: bold;
+    margin: 0 0 8px 0;
 }
 
 .project-description {
-    color: #586069;
-    margin-bottom: 15px;
+    color: #000000;
+    margin-bottom: 8px;
 }
 
 .project-meta {
     display: flex;
     align-items: center;
-    gap: 15px;
-    font-size: 0.9em;
-    color: #586069;
+    gap: 12px;
+    color: #000000;
 }
 
 .project-updated {
-    font-size: 0.8em;
-    color: #666;
-    margin: 10px 0;
+    color: #000000;
+    margin: 8px 0;
 }
 
 .project-link {
@@ -174,7 +189,292 @@ main::before, main::after {
 
 pre {
     overflow-x: auto;
-    border: 1px solid #A0522D; /* Sienna */
     padding: 10px;
-    border-radius: 5px;
+}
+
+/* Windows XP window title bar */
+.window-title-bar {
+    background: #000080;
+    color: white;
+    padding: 2px 4px;
+    font-weight: bold;
+    margin: -1rem -1rem 1rem -1rem;
+}
+
+/* Windows XP style buttons */
+button, .project-link {
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    padding: 4px 8px;
+    color: #000000;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    cursor: pointer;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+button:active, .project-link:active {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 5px 7px 3px 9px;
+}
+
+/* Update form inputs */
+input[type="text"], 
+input[type="password"], 
+select, 
+textarea {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    background: white;
+    padding: 3px;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    border-radius: 0;
+}
+
+/* Update project cards */
+.project-card {
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    padding: 12px;
+    border-radius: 0;
+}
+
+/* Search form */
+.search-form {
+    background: #C0C0C0;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    border-radius: 0;
+}
+
+/* Code blocks */
+pre {
+    background: white;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 8px;
+    border-radius: 0;
+}
+
+/* Project meta information */
+.project-meta {
+    background: #C0C0C0;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 4px;
+    margin: 8px 0;
+    border-radius: 0;
+}
+
+/* Remove any remaining border-radius */
+* {
+    border-radius: 0 !important;
+}
+
+/* Update blockquotes */
+blockquote {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    background: #C0C0C0;
+    margin: 8px 0;
+    padding: 8px;
+}
+
+/* Editor */
+.ck-editor__editable {
+    border-top: 2px solid #808080 !important;
+    border-left: 2px solid #808080 !important;
+    border-bottom: 2px solid #DFDFDF !important;
+    border-right: 2px solid #DFDFDF !important;
+    border-radius: 0 !important;
+}
+
+/* Tables */
+table {
+    border-collapse: separate;
+    border-spacing: 1px;
+    background: #C0C0C0;
+}
+
+th, td {
+    background: #C0C0C0;
+    border-top: 1px solid #DFDFDF;
+    border-left: 1px solid #DFDFDF;
+    border-bottom: 1px solid #808080;
+    border-right: 1px solid #808080;
+    padding: 4px 8px;
+}
+
+/* Remove any modern button styles */
+.project-link {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #C0C0C0;
+    color: #000000;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.project-link:hover {
+    text-decoration: none;
+    opacity: 1;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Update link styles to match Windows 98 buttons */
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+nav ul li a {
+    color: black;
+    text-decoration: none;
+    padding: 4px 8px;
+    display: block;
+    border: 2px solid #C0C0C0;
+}
+
+nav ul li a:hover {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    background: #C0C0C0;
+}
+
+/* Style clickable links like buttons */
+a:not(nav a):not(.project-link) {
+    display: inline-block;
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    padding: 4px 8px;
+    color: #000000;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:not(nav a):not(.project-link):active {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 5px 7px 3px 9px;
+}
+
+/* Update project links to match */
+.project-link {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #C0C0C0;
+    color: #000000;
+    text-decoration: none;
+    margin-top: 8px;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+}
+
+.project-link:active {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 5px 7px 3px 9px;
+}
+
+/* Search results links */
+#search-results li {
+    padding: 4px 8px;
+    cursor: pointer;
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    margin: 4px 0;
+}
+
+#search-results li:active {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 5px 7px 3px 9px;
+}
+
+.project-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 8px 12px;
+}
+
+/* Update project-card styles */
+.project-card {
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    padding: 12px;
+    display: block;
+    margin-bottom: 0px;
+    height: auto;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Update project-link styles for indented look */
+.project-link {
+    display: inline-block;
+    padding: 4px 8px;
+    margin-top: 0px;
+    background: #C0C0C0;
+    color: #000000;
+    text-decoration: none;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+}
+
+.project-link:active {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    padding: 5px 7px 3px 9px;
 }
