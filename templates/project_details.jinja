@@ -10,11 +10,11 @@
 
 {% block content %}
 <div class="flex justify-between">
-    <a href="{{ url_for('projects') }}" class="text-blue-500 hover:text-blue-700">
+    <a href="{{ url_for('projects') }}" class="text-blue-500 hover:text-blue-700 text-lg">
         ← Back to Projects
     </a>
     {% if current_user.is_authenticated %}
-    <button id="edit-button" class="ml-4 bg-blue-500 text-white px-4 py-2 w-32 rounded">Edit README</button>
+    <button id="edit-button" class="ml-4 bg-blue-500 text-white px-4 py-2 w-32 rounded">Edit</button>
     <button id="top-cancel-button" class="ml-4 bg-gray-500 text-white px-4 py-2 w-32 rounded hidden">Cancel</button>
     {% endif %}
 </div>

@@ -7,19 +7,31 @@
 
 <div class="projects-grid">
     {% for project in projects %}
-    <a href="{{ url_for('project_details', project=project.name) }}" class="project-card">
-        <h3 class="project-title">{{ project.name }}</h3>
+    <div class="project-card">
+        <h3 class="project-title" class="bg-blue">{{ project.name }}</h3>
         <p class="project-description">{{ project.description }}</p>
         <div class="project-meta">
-            <span>⭐ {{ project.stars }}</span>
-            <span>🔄 {{ project.forks }}</span>
-            <span>{{ project.language }}</span>
+            <span title="Stars" class="cursor-default">⭐ {{ project.stars }}</span>
+            <span title="Forks" class="cursor-default">🔄 {{ project.forks }}</span>
+            <span title="Language" class="cursor-default">{{ project.language }}</span>
         </div>
         <div class="project-updated">
             Last updated: {{ project.updated_at }}
         </div>
-        <button class="project-link" onclick="openProject(event, '{{ project.url }}')">View On GitHub</button>
-    </a>
+        <div class="project-actions">
+            <button class="project-link"
+                onclick="window.location.href = '{{ url_for('project_details', project=project.name) }}'">View More
+                Info
+            </button>
+            <button class="project-link" onclick="openProject(event, '{{ project.url }}')">
+                <div class="flex items-center gap-2">
+                    View On GitHub
+                    <img src="{{ url_for('static', filename='assets/github.svg') }}" alt="github">
+                </div>
+            </button>
+
+        </div>
+    </div>
     {% else %}
     <p>No projects found.</p>
     {% endfor %}

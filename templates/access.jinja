@@ -6,7 +6,7 @@
 <div class="flex justify-center items-center">
     <form id="access-form" class="flex flex-col gap-2 max-w-56" action="/access" method="POST">
         <label for="access-code">Access Code</label>
-        <input type="text" id="access-code" name="access-code">
+        <input type="password" id="access-code" name="access-code">
         <input type="hidden" name="on_success" value="{{ on_success }}" />
         <button type="submit">Submit</button>
         <p id="error-message"></p>
