@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Personal Website{% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
     {% block head %}{% endblock %}
 </head>
 
 <body>
     <header>
-        <nav>
+        <nav class="flex flex-col w-full h-full justify-between">
             <ul>
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('blog') }}">Blog</a></li>
@@ -24,15 +23,19 @@
                 {% for additional_link in session.get("additional_links", []) %}
                 <li><a href="{{ additional_link[0] }}">{{ additional_link[1] }}</a></li>
                 {% endfor %}
+                {% if current_user.is_authenticated %}
+                <li>
+                    <form action="/logout" method="post">
+                        <button id="logout-button" class="beveled p-1" type="submit">Logout</button>
+                    </form>
+                </li>
+
+                {% endif %}
             </ul>
-            {% if current_user.is_authenticated %}
-            <form action="/logout" method="post">
-                <button id="logout-button">Logout</button>
-            </form>
-            {% endif %}
+            <p class="flex items-center">&copy; 2024 Daniel Liao. All rights reserved.</p>
         </nav>
     </header>
-    <main>
+    <main class="grow flex flex-col items-center">
         <form id="search-form" class="search-form hidden" action="javascript:void(0);">
             <label for="query">Search:</label>
             <input type="text" id="query" name="query" placeholder="Search...">
@@ -42,11 +45,16 @@
                 {% endfor %}
             </ul>
         </form>
-        {% block content %}{% endblock %}
+
+        <div id="main-content">
+            <h1 class="mb-3 text-4xl font-bold">{% block content_title %}{% endblock %}</h1>
+            <p class="text-center mb-3">{% block content_description %}{% endblock %}</p>
+            {% block content %}{% endblock %}
+        </div>
+
+
     </main>
-    <footer>
-        <p>&copy; 2024 Daniel Liao. All rights reserved.</p>
-    </footer>
+
     <script type="importmap">
         {
             "imports": {

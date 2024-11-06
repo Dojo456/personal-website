@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block title %}
-{{ project_name }}
+My GitHub Project: {{ project_name }}
 {% endblock %}
 
 {% block content %}
-<div class="flex justify-between">
-    <a href="{{ url_for('projects') }}" class="text-blue-500 hover:text-blue-700 text-lg">
+<div class="flex justify-between mb-3">
+    <a href="{{ url_for('projects') }}" class="beveled text-lg p-1">
         ← Back to Projects
     </a>
     {% if current_user.is_authenticated %}
@@ -19,13 +19,13 @@
     {% endif %}
 </div>
 
-<div id="view-mode">
+<div id="view-mode" class="readable">
     {{ readme_content | safe }}
 </div>
 
 {% if current_user.is_authenticated %}
 
-<div id="edit-mode" class="hidden">
+<div id="edit-mode" class="hidden readable">
     <div id="editor"></div>
     <form method="POST" class="mt-4 flex gap-2" id="edit-form">
         <input type="hidden" id="content" name="content">

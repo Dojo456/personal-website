@@ -2,7 +2,41 @@
 
 {% block title %}Home{% endblock %}
 
-{% block content %}
-<h1 class="text-4xl font-bold">Welcome to My Personal Website</h1>
-<p class="text-center">This is the home page. Feel free to explore!</p>
+{% block content_title %}
+Welcome to My Personal Website
+{% endblock %}
+
+{% block content_description %}
+<div>
+
+    <p class="mb-2">Hi! My name is
+        <code class="rainbow font-bold readable">Daniel Liao</code>. I'm currently studying:
+    </p>
+
+    <div class="flex flex-row items-center gap-2 mb-2">
+        Business Administration @ <a href="https://www.babson.edu" target="_blank" rel="noopener noreferrer">
+            <div class="beveled flex items-center gap-2 ps-1 pe-1">
+                <img class="inline" src="{{ url_for('static', filename='assets/babson-college.png') }}" alt="babson"
+                    width="16" height="16">
+                Babson College ↗
+            </div>
+        </a>
+    </div>
+    <div class="flex flex-row items-center gap-2 mb-2">
+        Computer Science @ <a href="https://www.olin.edu" target="_blank" rel="noopener noreferrer">
+            <div class="beveled flex items-center gap-2 ps-1 pe-1">
+                <img class="inline" src="{{ url_for('static', filename='assets/olin-college.png') }}" alt="olin"
+                    width="16" height="16">
+                Olin College of Engineering ↗
+            </div>
+        </a>
+    </div>
+
+    <div class="readable">
+        <p class="text-sm">
+            I'm currently rebuilding my website, sorry about the mess!
+        </p>
+    </div>
+</div>
+
 {% endblock %}

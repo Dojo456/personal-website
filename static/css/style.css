@@ -3,22 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+@font-face {
+    font-family: "W95FA";
+    src: url("../../assets/w95fa.woff2") format("woff2");
 }
 
 body {
-    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-    line-height: 1.4;
+    font-family: "W95FA", "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    shape-rendering: optimizeSpeed;
+
+    font-size: larger;
+
     background: #008080;
     color: #000000;
     margin: 0;
     padding: 0;
     display: flex;
-    min-height: 100vh;
+    flex-direction: row;
     scrollbar-gutter: stable both-edges;
 }
 
@@ -26,12 +27,10 @@ header {
     background: #C0C0C0;
     color: black;
     padding: 1rem;
-    width: 200px;
-    position: fixed;
-    left: 0;
+    width: 8rem;
+    position: sticky;
     top: 0;
-    bottom: 0;
-    overflow-y: auto;
+    height: 100vh;
     border-right: 2px solid #DFDFDF;
     border-left: 2px solid #808080;
     border-top: 2px solid #DFDFDF;
@@ -63,60 +62,64 @@ nav ul li a:hover {
     background: #C0C0C0;
 }
 
-main {
+#main-content {
     background-color: #C0C0C0;
     border-top: 2px solid #DFDFDF;
     border-left: 2px solid #DFDFDF;
     border-bottom: 2px solid #808080;
     border-right: 2px solid #808080;
-    margin: 1rem 220px;
+    margin: 1rem;
+    max-width: 50rem;
     padding: 1rem;
-    width: calc(100% - 440px);
 }
 
-footer {
-    background: #C0C0C0;
-    color: black;
-    padding: 1rem;
-    width: 200px;
-    position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    overflow-y: auto;
-    border-left: 2px solid #808080;
-    border-right: 2px solid #DFDFDF;
-    border-top: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
+@media (max-width: 64rem) {
+    body {
+        flex-direction: column;
+    }
+
+    header {
+        height: min-content;
+        width: 100%;
+        bottom: 0;
+    }
+
+    header > nav {
+        flex-direction: row !important;
+    }
+
+    nav > ul > li {
+        display: inline-block;
+        margin: 0;
+    }
 }
 
-/* Styles for early 2000s feel */
-h1, h2, h3 {
-    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-    color: #000000;
-    text-align: left;
-    margin: 8px 0;
-    text-shadow: none;
-}
 
 .beveled {
+    background: #C0C0C0;
+    border-top: 2px solid #DFDFDF;
+    border-left: 2px solid #DFDFDF;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+}
+
+.beveled:hover {
+    transform: none;
+    transition: none;
+}
+
+button.beveled:active, a.beveled:active {
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;
     border-right: 2px solid #DFDFDF;
-    padding: 2px;
-    background-color: #C0C0C0;
-}
-
-input[type="password"] {
-    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    transform: translate(1px, 1px);
 }
 
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    padding: 20px;
 }
 
 .project-card {
@@ -125,13 +128,7 @@ input[type="password"] {
     border-left: 2px solid #DFDFDF;
     border-bottom: 2px solid #808080;
     border-right: 2px solid #808080;
-    padding: 12px;
     margin-bottom: 12px;
-    display: block;
-    height: auto;
-    box-shadow: none;
-    transform: none;
-    transition: none;
 }
 
 .project-card:hover {
@@ -139,15 +136,11 @@ input[type="password"] {
     transition: none;
 }
 
-.project-title {
-    color: #000000;
-    font-weight: bold;
+.title-bar {
+    color: white;
     margin: 0 0 8px 0;
-}
-
-.project-description {
-    color: #000000;
-    margin-bottom: 8px;
+    padding: 2px 8px;
+    background: linear-gradient(to right, #000080, #008080);
 }
 
 .project-meta {
@@ -155,25 +148,6 @@ input[type="password"] {
     align-items: center;
     gap: 12px;
     color: #000000;
-}
-
-.project-updated {
-    color: #000000;
-    margin: 8px 0;
-}
-
-.project-link {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #0366d6;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-top: 15px;
-}
-
-.project-link:hover {
-    opacity: 0.9;
 }
 
 @media (max-width: 600px) {
@@ -192,74 +166,6 @@ pre {
     padding: 10px;
 }
 
-/* Windows XP window title bar */
-.window-title-bar {
-    background: #000080;
-    color: white;
-    padding: 2px 4px;
-    font-weight: bold;
-    margin: -1rem -1rem 1rem -1rem;
-}
-
-/* Windows XP style buttons */
-button, .project-link {
-    background: #C0C0C0;
-    border-top: 2px solid #DFDFDF;
-    border-left: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
-    border-right: 2px solid #808080;
-    padding: 4px 8px;
-    color: #000000;
-    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-    cursor: pointer;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-button:active, .project-link:active {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    padding: 5px 7px 3px 9px;
-}
-
-/* Update form inputs */
-input[type="text"], 
-input[type="password"], 
-select, 
-textarea {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    background: white;
-    padding: 3px;
-    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-    border-radius: 0;
-}
-
-/* Update project cards */
-.project-card {
-    background: #C0C0C0;
-    border-top: 2px solid #DFDFDF;
-    border-left: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
-    border-right: 2px solid #808080;
-    padding: 12px;
-    border-radius: 0;
-}
-
-/* Search form */
-.search-form {
-    background: #C0C0C0;
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    border-radius: 0;
-}
-
 /* Code blocks */
 pre {
     background: white;
@@ -272,32 +178,14 @@ pre {
 }
 
 /* Project meta information */
-.project-meta {
+.indented {
     background: #C0C0C0;
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;
     border-right: 2px solid #DFDFDF;
-    padding: 4px;
-    margin: 8px 0;
-    border-radius: 0;
 }
 
-/* Remove any remaining border-radius */
-* {
-    border-radius: 0 !important;
-}
-
-/* Update blockquotes */
-blockquote {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    background: #C0C0C0;
-    margin: 8px 0;
-    padding: 8px;
-}
 
 /* Editor */
 .ck-editor__editable {
@@ -324,36 +212,6 @@ th, td {
     padding: 4px 8px;
 }
 
-/* Remove any modern button styles */
-.project-link {
-    display: inline-block;
-    padding: 4px 8px;
-    background: #C0C0C0;
-    color: #000000;
-    text-decoration: none;
-    margin-top: 8px;
-}
-
-.project-link:hover {
-    text-decoration: none;
-    opacity: 1;
-}
-
-a {
-    color: #000000;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Update link styles to match Windows 98 buttons */
-a {
-    color: #000000;
-    text-decoration: none;
-}
-
 nav ul li a {
     color: black;
     text-decoration: none;
@@ -370,51 +228,6 @@ nav ul li a:hover {
     background: #C0C0C0;
 }
 
-/* Style clickable links like buttons */
-a:not(nav a):not(.project-link) {
-    display: inline-block;
-    background: #C0C0C0;
-    border-top: 2px solid #DFDFDF;
-    border-left: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
-    border-right: 2px solid #808080;
-    padding: 4px 8px;
-    color: #000000;
-    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-a:not(nav a):not(.project-link):active {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    padding: 5px 7px 3px 9px;
-}
-
-/* Update project links to match */
-.project-link {
-    display: inline-block;
-    padding: 4px 8px;
-    background: #C0C0C0;
-    color: #000000;
-    text-decoration: none;
-    margin-top: 8px;
-    border-top: 2px solid #DFDFDF;
-    border-left: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
-    border-right: 2px solid #808080;
-}
-
-.project-link:active {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    padding: 5px 7px 3px 9px;
-}
-
 /* Search results links */
 #search-results li {
     padding: 4px 8px;
@@ -428,50 +241,6 @@ a:not(nav a):not(.project-link):active {
 }
 
 #search-results li:active {
-    border-top: 2px solid #808080;
-    border-left: 2px solid #808080;
-    border-bottom: 2px solid #DFDFDF;
-    border-right: 2px solid #DFDFDF;
-    padding: 5px 7px 3px 9px;
-}
-
-.project-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 8px 12px;
-}
-
-/* Update project-card styles */
-.project-card {
-    background: #C0C0C0;
-    border-top: 2px solid #DFDFDF;
-    border-left: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
-    border-right: 2px solid #808080;
-    padding: 12px;
-    display: block;
-    margin-bottom: 0px;
-    height: auto;
-    text-decoration: none;
-    color: inherit;
-}
-
-/* Update project-link styles for indented look */
-.project-link {
-    display: inline-block;
-    padding: 4px 8px;
-    margin-top: 0px;
-    background: #C0C0C0;
-    color: #000000;
-    text-decoration: none;
-    border-top: 2px solid #DFDFDF;
-    border-left: 2px solid #DFDFDF;
-    border-bottom: 2px solid #808080;
-    border-right: 2px solid #808080;
-}
-
-.project-link:active {
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;

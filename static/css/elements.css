@@ -18,18 +18,51 @@
     border-radius: 4px;
 }
 
-.ignore-css{
-    all:unset;
+.readable * {
+    font-size: revert;
+    font-weight: revert;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+    color: revert;
 }
 
-#view-mode h1 {
-    font-size: 32px;
+.readable :not(pre) > code, code.readable {
+    display: inline-block;
+    padding: 1px 2px;
+    background-color: white;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+    box-sizing: content-box;
 }
 
-#view-mode h2 {
-    font-size: 24px;
+.readable a, a.readable {
+   font-family: monospace;
+   font-size: large;
 }
 
-#view-mode h3 {
-    font-size: 16px;
+.rainbow {
+    background-image: linear-gradient(
+        to right,
+        #ff0000,
+        #ffa500,
+        #ffff00,
+        #00ff00,
+        #0000ff,
+        #4b0082,
+        #9400d3,
+        #ff0000
+    );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: rainbow 4s linear infinite;
 }
+
+@keyframes rainbow {
+    to {
+        background-position: 200% center;
+    }
+}
+
