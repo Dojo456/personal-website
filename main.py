@@ -247,7 +247,7 @@ def projects():
         headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
     )
     if not response.ok:
-        abort(500)
+        abort(500, response.text)
 
     projects = response.json()
     # Sort projects by stars
@@ -267,6 +267,7 @@ def projects():
             ).strftime("%B %d, %Y"),
         }
         for project in projects
+        if project["stargazers_count"] > 0
     ]
 
     return render_template("projects.jinja", projects=formatted_projects)
