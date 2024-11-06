@@ -250,8 +250,6 @@ def projects():
         abort(500, response.text)
 
     projects = response.json()
-    # Sort projects by stars
-    projects.sort(key=lambda x: x.get("stargazers_count", 0), reverse=True)
 
     # Clean up project data
     formatted_projects = [
@@ -263,12 +261,17 @@ def projects():
             "language": project.get("language", "N/A"),
             "url": project["html_url"],
             "updated_at": datetime.strptime(
-                project["updated_at"], "%Y-%m-%dT%H:%M:%SZ"
+                project["pushed_at"], "%Y-%m-%dT%H:%M:%SZ"
+            ).strftime("%B %d, %Y"),
+            "created_at": datetime.strptime(
+                project["created_at"], "%Y-%m-%dT%H:%M:%SZ"
             ).strftime("%B %d, %Y"),
         }
         for project in projects
         if project["stargazers_count"] > 0
     ]
+
+    formatted_projects.sort(key=lambda x: x["created_at"])
 
     return render_template("projects.jinja", projects=formatted_projects)
 
