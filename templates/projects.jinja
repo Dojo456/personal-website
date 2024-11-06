@@ -2,34 +2,44 @@
 
 {% block title %}Projects{% endblock %}
 
+{% block content_title %}
+My GitHub Projects
+{% endblock %}
+
+{% block content_description %}
+Click on the <span class="beveled p-2">View More Info</span> buttons to view more information about each project.
+{% endblock %}
+
 {% block content %}
-<h1 class="text-4xl font-bold">My GitHub Projects</h1>
 
-<div class="projects-grid">
+<div class="projects-grid p-0">
     {% for project in projects %}
-    <div class="project-card">
-        <h3 class="project-title" class="bg-blue">{{ project.name }}</h3>
-        <p class="project-description">{{ project.description }}</p>
-        <div class="project-meta">
-            <span title="Stars" class="cursor-default">⭐ {{ project.stars }}</span>
-            <span title="Forks" class="cursor-default">🔄 {{ project.forks }}</span>
-            <span title="Language" class="cursor-default">{{ project.language }}</span>
-        </div>
-        <div class="project-updated">
-            Last updated: {{ project.updated_at }}
-        </div>
-        <div class="project-actions">
-            <button class="project-link"
-                onclick="window.location.href = '{{ url_for('project_details', project=project.name) }}'">View More
-                Info
-            </button>
-            <button class="project-link" onclick="openProject(event, '{{ project.url }}')">
-                <div class="flex items-center gap-2">
-                    View On GitHub
-                    <img src="{{ url_for('static', filename='assets/github.svg') }}" alt="github">
-                </div>
-            </button>
+    <div class="beveled flex flex-col p-0">
+        <h3 class="title-bar">{{ project.name }}</h3>
+        <div class="p-2 pt-0 flex flex-col justify-between grow">
+            <p class="project-description grow">{{ project.description }}</p>
+            <div class="indented p-1">
+                <span title="Stars" class="cursor-default me-2">⭐{{ project.stars }}</span>
+                <span title="Forks" class="cursor-default me-2">🔄{{ project.forks }}</span>
+                <span title="Language" class="cursor-default">{{ project.language }}</span>
+            </div>
+            <div class="project-updated">
+                Last updated: {{ project.updated_at }}
+            </div>
 
+            <div class="flex justify-between gap-2 pt-2">
+                <button class="beveled p-1"
+                    onclick="window.location.href = '{{ url_for('project_details', project=project.name) }}'">View More
+                    Info
+                </button>
+                <button class="beveled p-1" onclick="openProject(event, '{{ project.url }}')">
+                    <div class="flex items-center gap-2">
+                        <p>↗</p> GitHub
+                        <img src="{{ url_for('static', filename='assets/github.svg') }}" alt="github" width="16"
+                            height="16">
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
     {% else %}

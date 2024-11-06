@@ -2,6 +2,7 @@ import base64
 import html
 import math
 import os
+import time
 import typing
 from datetime import datetime
 
@@ -241,7 +242,10 @@ def login():
 def projects():
     username = "Dojo456"
 
-    response = requests.get(f"https://api.github.com/users/{username}/repos")
+    response = requests.get(
+        f"https://api.github.com/users/{username}/repos",
+        headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
+    )
     if not response.ok:
         abort(500)
 
@@ -288,18 +292,23 @@ def project_details(project):
             headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
         )
 
+        # GitHub API is eventually consistent, so wait a second
+        time.sleep(1)
+
         return redirect(url_for("project_details", project=project))
 
     try:
         # Fetch README content from GitHub API
         response = requests.get(
-            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md"
+            f"https://api.github.com/repos/Dojo456/{project}/contents/README.md",
+            headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
         )
 
         if response.status_code == 404:
             readme_content = "I haven't written a README for this project yet."
             sha = None
         elif not response.ok:
+            print(response.text)
             abort(500)
         else:
             content = response.json()

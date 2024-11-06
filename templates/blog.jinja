@@ -6,25 +6,30 @@
 
 {% block title %}Blog{% endblock %}
 
-{% block content %}
+{% block content_title %}
 
 {% if alt_title %}
-<h1 class="p-0 text-4xl font-bold">{{ alt_title }}</h1>
+{{ alt_title }}
 {% else %}
-<h1 class="p-0 text-4xl font-bold">Welcome to my blog!</h1>
+Welcome to my blog!
 {% endif %}
-{% if alt_description %}
-<p class="text-center">{{ alt_description }}</p>
-{% else %}
-<p class="text-center">I kinda just write random stuff that comes to my mind.</p>
-{% endif %}
+{% endblock %}
 
+{% block content_description %}
+{% if alt_description %}
+{{ alt_description }}
+{% else %}
+I kinda just write random stuff that comes to my mind.
+{% endif %}
+{% endblock %}
+
+{% block content %}
 
 {% for post in posts %}
 <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-<div class="flex flex-col">
+<div class="flex flex-col readable">
     <p class="text-sm">{{ post.created.strftime("%B %d, %Y") }}</p>
-    <h2 class="text-3xl font-bold">{{ post.title }}</h2>
+    <h2>{{ post.title }}</h2>
     <br>
     <div class="text-md">{{ post.content | safe }}</div>
 </div>
