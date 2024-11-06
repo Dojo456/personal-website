@@ -260,18 +260,16 @@ def projects():
             "forks": project["forks_count"],
             "language": project.get("language", "N/A"),
             "url": project["html_url"],
-            "updated_at": datetime.strptime(
-                project["pushed_at"], "%Y-%m-%dT%H:%M:%SZ"
-            ).strftime("%B %d, %Y"),
+            "updated_at": datetime.strptime(project["pushed_at"], "%Y-%m-%dT%H:%M:%SZ"),
             "created_at": datetime.strptime(
                 project["created_at"], "%Y-%m-%dT%H:%M:%SZ"
-            ).strftime("%B %d, %Y"),
+            ),
         }
         for project in projects
         if project["stargazers_count"] > 0
     ]
 
-    formatted_projects.sort(key=lambda x: x["created_at"])
+    formatted_projects.sort(key=lambda x: x["updated_at"].timestamp(), reverse=True)
 
     return render_template("projects.jinja", projects=formatted_projects)
 
