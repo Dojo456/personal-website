@@ -24,7 +24,7 @@ Click on the <span class="beveled p-2">View More Info</span> buttons to view mor
                 <span title="Language" class="cursor-default">{{ project.language }}</span>
             </div>
             <div class="project-updated">
-                Last updated: {{ project.updated_at }}
+                Last updated: {{ project.updated_at.strftime("%B %d, %Y") }}
             </div>
 
             <div class="flex justify-between gap-2 pt-2">
