@@ -4,6 +4,8 @@
 #
 #    pip-compile
 #
+bidict==0.23.1
+    # via python-socketio
 blinker==1.8.2
     # via flask
 cachecontrol==0.14.0
@@ -28,7 +30,10 @@ flask==3.0.3
     # via
     #   -r requirements.in
     #   flask-login
+    #   flask-socketio
 flask-login==0.6.3
+    # via -r requirements.in
+flask-socketio==5.4.1
     # via -r requirements.in
 google-api-core[grpc]==2.20.0
     # via
@@ -73,6 +78,8 @@ grpcio==1.66.2
     #   grpcio-status
 grpcio-status==1.66.2
     # via google-api-core
+h11==0.14.0
+    # via wsproto
 httplib2==0.22.0
     # via
     #   google-api-python-client
@@ -114,6 +121,10 @@ pyparsing==3.1.4
     # via httplib2
 python-dotenv==1.0.1
     # via -r requirements.in
+python-engineio==4.10.1
+    # via python-socketio
+python-socketio==5.11.4
+    # via flask-socketio
 requests==2.32.3
     # via
     #   cachecontrol
@@ -121,6 +132,8 @@ requests==2.32.3
     #   google-cloud-storage
 rsa==4.9
     # via google-auth
+simple-websocket==1.1.0
+    # via python-engineio
 uritemplate==4.1.1
     # via google-api-python-client
 urllib3==2.2.3
@@ -129,3 +142,5 @@ werkzeug==3.0.4
     # via
     #   flask
     #   flask-login
+wsproto==1.2.0
+    # via simple-websocket

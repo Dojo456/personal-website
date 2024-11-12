@@ -2,3 +2,4 @@ Flask
 python-dotenv
 firebase-admin
 flask-login
+flask-socketio

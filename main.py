@@ -7,6 +7,7 @@ import typing
 from datetime import datetime
 
 import firebase_admin
+from flask_socketio import SocketIO
 import requests
 from dotenv import load_dotenv
 from firebase_admin import auth, firestore
@@ -41,6 +42,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
+socketio = SocketIO(app)
 
 # Configure Jinja2 to recognize .jinja files
 
@@ -135,7 +137,22 @@ def blog(topic: str | None = None):
     )
 
 
-@app.route("/blog/new", methods=["GET", "POST"])
+@socketio.on("update_editor")
+def update_editor(data):
+    if data is None:
+        return "Missing data"
+
+    content = data.get("content")
+
+    if not content:
+        return "Missing content"
+
+    db.collection("admin").document("editor").update({"content": content})
+
+    return "OK"
+
+
+@app.route("/blog/new", methods=["GET", "POST", "PUT"])
 def new_post():
     if not current_user.is_authenticated:
         return redirect(url_for("home"))
@@ -146,14 +163,19 @@ def new_post():
         entry["created"] = firestore.firestore.SERVER_TIMESTAMP
 
         db.collection("posts").add(entry)
+        db.collection("admin").document("editor").update({"content": ""})
 
         topic = entry["topic"]
 
         return redirect(url_for("blog", topic=topic if topic != "default" else None))
 
     topics = set(doc.id for doc in db.collection("blogs").stream())
+    editor_doc = db.collection("admin").document("editor").get().to_dict()
+    initial_content = editor_doc.get("content") if editor_doc else None
 
-    return render_template("new_post.jinja", topics=list(topics))
+    return render_template(
+        "new_post.jinja", topics=list(topics), initial_content=initial_content
+    )
 
 
 @app.route("/search")
