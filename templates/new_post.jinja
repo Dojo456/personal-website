@@ -28,26 +28,36 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"></script>
 <script type="module">
     import { createEditor } from "{{ url_for('static', filename='js/script.js') }}";
 
-    const editor = createEditor(document.getElementById('editor'));
+    createEditor(document.getElementById('editor')).then(editor => {
+        editor.setData("{{ initial_content | safe }}");
+        var socket = io();
 
-    document.getElementById('topic-select').addEventListener('change', function (event) {
-        if (event.target.value === 'other') {
-            document.getElementById('topic-text').classList.remove('hidden');
-        } else {
-            document.getElementById('topic-text').classList.add('hidden');
+        editor.model.document.on('change', function (event) {
+            socket.emit('update_editor', { content: editor.getData() });
+        });
+
+        document.getElementById('topic-select').addEventListener('change', function (event) {
+            if (event.target.value === 'other') {
+                document.getElementById('topic-text').classList.remove('hidden');
+            } else {
+                document.getElementById('topic-text').classList.add('hidden');
+                document.getElementById('topic').value = event.target.value;
+            }
+        });
+
+        document.getElementById('topic-text').addEventListener('change', function (event) {
             document.getElementById('topic').value = event.target.value;
-        }
-    });
+        });
 
-    document.getElementById('topic-text').addEventListener('change', function (event) {
-        document.getElementById('topic').value = event.target.value;
-    });
-
-    document.getElementById('new-post-form').addEventListener('submit', function (event) {
-        document.getElementById('content').value = editor.getData();
+        document.getElementById('new-post-form').addEventListener('submit', function (event) {
+            document.getElementById('content').value = editor.getData();
+        });
     });
 </script>
 {% endblock %}
