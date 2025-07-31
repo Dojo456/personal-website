@@ -1,1 +1,27 @@
-Hi Christina!
+{% extends "playlist/base.jinja" %}
+
+{% block content %}
+<div class="w-[300px] absolute top-6 left-6 flex flex-col gap-4 sticky-note">
+    <p>
+        Hi Christina! Sorry this took so long to make, this has been a really busy summer and also it's been a while
+        since I've built websites like this.
+    </p>
+
+    <p>
+        But I really wanted to make this as a website instead of Spotify playlist because I wanted to add my own
+        comments and also little visual stuff, almost more like a blog with each song as a post.
+    </p>
+
+</div>
+
+<div class="w-[200px] absolute bottom-6 right-6 flex flex-col gap-4 sticky-note">
+    <img src="{{ url_for('static', filename='assets/images/tabby-cat-sitting-funny-pose-044zyhw0p4szg672.png') }}"
+        alt="cat" class="w-full h-full object-cover">
+</div>
+
+<div class="w-[300px] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+    <p>Anyways, click here to enter the playlist</p>
+    <a href="{{ url_for('playlist.song', index=0) }}" class="beveled">Enter</a>
+</div>
+
+{% endblock %}

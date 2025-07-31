@@ -1,74 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "playlist/base.jinja" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Personal Website{% endblock %}</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/tailwind.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/elements.css')}}">
-    {% block head %}{% endblock %}
-</head>
 
-<body class="unset">
-    <header>
-        {% block header %}
-        <h1>Playlist for you, song {{ index }}</h1>
+{% block header %}
+<div class="flex flex-row justify-between items-center w-full">
+    <button class="beveled p-1" onclick="previous()">Previous</button>
+
+    <h1 class="text-center">
+        {% block title %}
+        Song {{ index }}: {% block song_name %}{% endblock %}
         {% endblock %}
-    </header>
-    <main class="grow flex flex-col items-center">
-        <div id="search-form" class="search-form hidden beveled p-1">
-            <span class="flex justify-between items-center title-bar">
-                <h2>Super Duper Secret Search Bar</h2>
-                <button class="beveled p-1 h-6 w-8 text-black flex items-center justify-center font-extrabold text-sm"
-                    onclick="hideSearchForm()">X</button>
-            </span>
-            <form class="mh-2" action="javascript:void(0);">
-                <label class="flex items-center gap-2">Search:
-                    <input type="text" id="query" name="query" class="w-full outline-none inset-beveled">
-                </label>
-                <ul id="search-results">
-                    {% for result in results %}
-                    <li>{{ result }}</li>
-                    {% endfor %}
-                </ul>
-            </form>
+    </h1>
 
-        </div>
-        <button class="beveled p-1" onclick="next()">Next</button>
+    <button class="beveled p-1" onclick="next()">Next</button>
+</div>
+{% endblock %}
 
-        {% block content %}{% endblock %}
 
-        <button class="beveled p-1" onclick="previous()">Previous</button>
 
-    </main>
 
-    <script>
-        const searchForm = document.getElementById("search-form");
 
-        function hideSearchForm() {
-            searchForm.classList.add("hidden");
-        }
+{% block scripts %}
+<script>
+    function next() {
+        window.location.href = "{{ url_for('playlist.song', index=index + 1) }}";
+    }
 
-        function next() {
-            window.location.href = "{{ url_for('playlist.song', index=index + 1) }}";
-        }
-
-        function previous() {
-            window.location.href = "{{ url_for('playlist.song', index=index - 1) }}";
-        }
-    </script>
-
-    <script type="importmap">
-        {
-            "imports": {
-                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.js"
-            }
-        }
-    </script>
-    <script src="{{ url_for('static', filename='js/script.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/firebase.js') }}" type="module"></script>
-    {% block scripts %}{% endblock %}
-</body>
-
-</html>
+    function previous() {
+        window.location.href = "{{ url_for('playlist.song', index=index - 1) }}";
+    }
+</script>
+{% endblock %}

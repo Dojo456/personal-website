@@ -47,13 +47,6 @@
             searchForm.classList.add("hidden");
         }
 
-        function next() {
-            window.location.href = "{{ url_for('playlist.song', index=index + 1) }}";
-        }
-
-        function previous() {
-            window.location.href = "{{ url_for('playlist.song', index=index - 1) }}";
-        }
     </script>
 
     <script type="importmap">
