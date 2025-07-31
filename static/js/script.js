@@ -4,12 +4,6 @@ const registerListeners = () => {
     const searchResults = document.getElementById("search-results");
 
     document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            searchForm.classList.add("hidden");
-        }
-    });
-
-    document.addEventListener("keydown", function (event) {
         if (event.altKey && event.key === "p") {
             searchForm.classList.remove("hidden");
             searchInput.value = "";

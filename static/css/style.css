@@ -1,11 +1,8 @@
 @import "elements.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @font-face {
     font-family: "W95FA";
-    src: url("../../assets/w95fa.woff2") format("woff2");
+    src: url("../assets/w95fa.woff2") format("woff2");
 }
 
 body {
@@ -103,17 +100,20 @@ nav ul li a:hover {
     border-right: 2px solid #808080;
 }
 
-.beveled:hover {
-    transform: none;
-    transition: none;
-}
-
 button.beveled:active, a.beveled:active {
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;
     border-right: 2px solid #DFDFDF;
     transform: translate(1px, 1px);
+}
+
+.inset-beveled {
+    background: white;
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-bottom: 2px solid #C0C0C0;
+    border-right: 2px solid #C0C0C0;
 }
 
 .projects-grid {
