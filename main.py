@@ -190,12 +190,20 @@ def new_post():
 def search():
     query = request.args.get("query")
 
-    if query == "mrow":
-        results = [
-            {"description": "Log In", "url": "/login"},
-        ]
-    else:
-        results = []
+    results = []
+
+    search_terms = db.collection("search").where("term", "==", query).get()
+
+    search_terms = [doc for doc in [term.to_dict() for term in search_terms] if doc]
+
+    for term in search_terms:
+        results.append(
+            {
+                "description": term.get("description"),
+                "url": term.get("url"),
+                "term": term.get("term"),
+            }
+        )
 
     return results
 
