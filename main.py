@@ -24,6 +24,7 @@ from flask import (
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from jinja2 import FileSystemLoader, select_autoescape
 
+from routers import playlist_blueprint
 from utils import BlogInfo
 
 # Environment Setup
@@ -33,7 +34,14 @@ API_KEY = os.getenv("FIREBASE_API_KEY")
 
 # Application Default credentials are automatically created.
 
-default_app = firebase_admin.initialize_app()
+if os.getenv("ENV") == "production":
+    default_app = firebase_admin.initialize_app()
+else:
+    default_app = firebase_admin.initialize_app(
+        credential=firebase_admin.credentials.Certificate(
+            os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
+        )
+    )
 db = firestore.client()
 
 # Flask Setup
@@ -182,14 +190,54 @@ def new_post():
 def search():
     query = request.args.get("query")
 
-    if query == "mrow":
-        results = [
-            {"description": "Log In", "url": "/login"},
-        ]
-    else:
-        results = []
+    results = []
+
+    search_terms = db.collection("search").where("term", "==", query).get()
+
+    search_terms = [doc for doc in [term.to_dict() for term in search_terms] if doc]
+
+    for term in search_terms:
+        results.append(
+            {
+                "description": term.get("description"),
+                "url": term.get("url"),
+                "term": term.get("term"),
+            }
+        )
 
     return results
+
+
+@app.route("/search_terms", methods=["GET", "POST"])
+def search_terms():
+    if not current_user.is_authenticated:
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        term = request.form.get("term")
+        description = request.form.get("description")
+        url = request.form.get("url")
+
+        db.collection("search").add(
+            {"term": term, "description": description, "url": url}
+        )
+
+        return redirect(url_for("search_terms"))
+
+    search_terms = db.collection("search").get()
+
+    search_terms = [term.to_dict() for term in search_terms]
+
+    return render_template("search_terms.jinja", terms=search_terms)
+
+
+@app.route("/delete_term", methods=["POST"])
+def delete_term():
+    term = request.form.get("term")
+
+    db.collection("search").document(term).delete()
+
+    return redirect(url_for("search_terms"))
 
 
 @app.route("/access", methods=["GET", "POST"])
@@ -352,6 +400,17 @@ def project_details(project):
         flash(f"Error fetching README: {str(e)}", "error")
         return redirect(url_for("projects"))
 
+
+@playlist_blueprint.before_request
+def before_request():
+    if (
+        "playlist" not in session.get("scopes", [])
+        and not current_user.is_authenticated
+    ):
+        return redirect(url_for("access", on_success=url_for("playlist.playlist")))
+
+
+app.register_blueprint(playlist_blueprint, url_prefix="/playlist")
 
 if __name__ == "__main__":
     app.run(debug=True)

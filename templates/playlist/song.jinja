@@ -1,0 +1,32 @@
+{% extends "playlist/base.jinja" %}
+
+
+{% block header %}
+<div class="flex flex-row justify-between items-center w-full">
+    <button class="beveled p-1" onclick="previous()">Previous</button>
+
+    <h1 class="text-center">
+        {% block title %}
+        Song {{ index }}: {% block song_name %}{% endblock %}
+        {% endblock %}
+    </h1>
+
+    <button class="beveled p-1" onclick="next()">Next</button>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block scripts %}
+<script>
+    function next() {
+        window.location.href = "{{ url_for('playlist.song', index=index + 1) }}";
+    }
+
+    function previous() {
+        window.location.href = "{{ url_for('playlist.song', index=index - 1) }}";
+    }
+</script>
+{% endblock %}

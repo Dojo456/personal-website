@@ -4,12 +4,6 @@ const registerListeners = () => {
     const searchResults = document.getElementById("search-results");
 
     document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            searchForm.classList.add("hidden");
-        }
-    });
-
-    document.addEventListener("keydown", function (event) {
         if (event.altKey && event.key === "p") {
             searchForm.classList.remove("hidden");
             searchInput.value = "";
@@ -17,24 +11,33 @@ const registerListeners = () => {
         }
     });
 
+    let searchTimeout = null;
+
     searchInput.addEventListener("input", function (event) {
         const term = event.target.value;
 
-        fetch(`/search?query=${term}`)
-            .then((response) => response.json())
-            .then((data) => {
-                data.forEach((result) => {
-                    const li = document.createElement("li");
-                    li.innerHTML = result.description;
-                    li.onclick = () => {
-                        window.location.href = result.url;
-                    };
-                    searchResults.appendChild(li);
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+
+        searchTimeout = setTimeout(() => {
+            fetch(`/search?query=${term}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    searchResults.innerHTML = "";
+                    data.forEach((result) => {
+                        const li = document.createElement("li");
+                        li.innerHTML = result.description;
+                        li.onclick = () => {
+                            window.location.href = result.url;
+                        };
+                        searchResults.appendChild(li);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
                 });
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+        }, 200);
     });
 };
 

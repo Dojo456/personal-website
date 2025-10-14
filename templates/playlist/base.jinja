@@ -6,36 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Personal Website{% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static',filename='dist/css/tailwind.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
+    <link rel="stylesheet" href="{{url_for('static',filename='css/elements.css')}}">
     {% block head %}{% endblock %}
 </head>
 
-<body>
+<body class="unset">
     <header>
-        <nav class="flex flex-col w-full h-full justify-between">
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('blog') }}">Blog</a></li>
-                <li><a href="{{ url_for('projects') }}">Projects</a></li>
-                {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('new_post') }}">New Post</a></li>
-                <li><a href="{{ url_for('search_terms') }}">Search Terms</a></li>
-                {% endif %}
-                {% for additional_link in session.get("additional_links", []) %}
-                <li><a href="{{ additional_link[0] }}">{{ additional_link[1] }}</a></li>
-                {% endfor %}
-                {% if current_user.is_authenticated %}
-                <li>
-                    <form action="/logout" method="post">
-                        <button id="logout-button" class="beveled p-1" type="submit">Logout</button>
-                    </form>
-                </li>
-
-                {% endif %}
-            </ul>
-            <p class="flex items-center">&copy; 2024 Daniel Liao. All rights reserved.</p>
-        </nav>
+        {% block header %}
+        {% endblock %}
     </header>
     <main class="grow flex flex-col items-center">
         <div id="search-form" class="search-form hidden beveled p-1">
@@ -57,11 +35,7 @@
 
         </div>
 
-        <div id="main-content">
-            <h1 class="mb-3 text-4xl font-bold">{% block content_title %}{% endblock %}</h1>
-            <p class="text-center mb-3">{% block content_description %}{% endblock %}</p>
-            {% block content %}{% endblock %}
-        </div>
+        {% block content %}{% endblock %}
 
 
     </main>
@@ -72,6 +46,7 @@
         function hideSearchForm() {
             searchForm.classList.add("hidden");
         }
+
     </script>
 
     <script type="importmap">

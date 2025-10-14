@@ -1,0 +1,45 @@
+{% extends "base.jinja" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/pell/dist/pell.min.css">
+{% endblock %}
+
+{% block title %}Search Terms{% endblock %}
+
+{% block content %}
+<table class="table-auto w-full beveled">
+    <thead>
+        <tr>
+            <th>Term</th>
+            <th>Description</th>
+            <th>URL</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    {% for term in terms %}
+    <tr>
+        <td>{{ term.term }}</td>
+        <td>{{ term.description }}</td>
+        <td>{{ term.url }}</td>
+        <td>
+            <div class="beveled">
+                <form action="{{ url_for('delete_term') }}" method="post">
+                    <input type="hidden" name="term" value="{{ term.term }}">
+                    <button type="submit" class="bg-red-500 w-full h-full p-1 font-semibold text-white">Delete</button>
+                </form>
+            </div>
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="flex flex-col beveled mt-2 p-2">
+    <h2>Add Search Term</h2>
+    <form action="{{ url_for('search_terms') }}" method="post">
+        <input type="text" name="term" placeholder="Term">
+        <input type="text" name="description" placeholder="Description">
+        <input type="text" name="url" placeholder="URL">
+        <button type="submit" class="beveled p-1">Add</button>
+    </form>
+</div>
+{% endblock %}
