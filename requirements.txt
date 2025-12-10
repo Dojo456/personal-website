@@ -20,8 +20,6 @@ charset-normalizer==3.4.0
     # via requests
 click==8.1.7
     # via flask
-colorama==0.4.6
-    # via click
 cryptography==43.0.1
     # via pyjwt
 firebase-admin==6.5.0
@@ -136,7 +134,7 @@ simple-websocket==1.1.0
     # via python-engineio
 uritemplate==4.1.1
     # via google-api-python-client
-urllib3==2.2.3
+urllib3==2.6.0
     # via requests
 werkzeug==3.0.4
     # via
