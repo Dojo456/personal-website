@@ -8,35 +8,100 @@ Welcome to My Personal Website
 
 {% block content_description %}
 <div>
-
     <p class="mb-2">Hi! My name is
-        <code class="rainbow font-bold readable">Daniel Liao</code>. I'm currently studying:
+        <code class="rainbow font-bold readable">Daniel Liao</code>. Thank's for coming in today. Here, have a cup of tea:
+        <div class="w-full flex flex-row items-center justify-center gap-2 p-2 inverse-beveled mb-8">
+        All beveled buttons are clickable. So click me -->
+            <button class="beveled p-4" onclick="openTea()"><img src="{{ url_for('static', filename='assets/images/cute-pixel-art-green-tea-matcha-leaf-icon-illustration-png.webp') }}" alt="tea" width="24" height="24"></button>
+        </div>
     </p>
 
-    <div class="flex flex-row items-center gap-2 mb-2">
-        Business Administration @ <a href="https://www.babson.edu" target="_blank" rel="noopener noreferrer">
-            <div class="beveled flex items-center gap-2 ps-1 pe-1">
-                <img class="inline" src="{{ url_for('static', filename='assets/babson-college.png') }}" alt="babson"
-                    width="16" height="16">
-                Babson College ↗
-            </div>
-        </a>
-    </div>
-    <div class="flex flex-row items-center gap-2 mb-2">
-        Computer Science @ <a href="https://www.olin.edu" target="_blank" rel="noopener noreferrer">
-            <div class="beveled flex items-center gap-2 ps-1 pe-1">
-                <img class="inline" src="{{ url_for('static', filename='assets/olin-college.png') }}" alt="olin"
-                    width="16" height="16">
-                Olin College of Engineering ↗
-            </div>
-        </a>
+    <p>
+        I believe in clean energy, sustainable agriculture, queer rights, and education access.
+    </p>
+
+    <p>
+        You can learn more about this by reading my <a class="link" href="{{ url_for('blog') }}">blogs</a>, viewing my <a class="link" href="{{ url_for('projects') }}">projects</a>, or reading below {{"(◑‿◐)"}}
+    </p>
+
+    <div class="flex justify-center w-full mt-8">
+        <button class="beveled p-1" onclick="setAboutMeVisibility(true)">Learn more about me</button>
     </div>
 
-    <div class="readable">
-        <p class="text-sm">
-            I'm currently rebuilding my website, sorry about the mess!
-        </p>
+    <div class="beveled fixed hidden w-[700px] h-[500px]" style="top: 50%; left: 50%; transform: translate(-50%, -50%);" id="aboutMe">
+        <h3 class="title-bar flex justify-between items-center cursor-move" id="aboutMeTitle">A little about me <button class="beveled text-black w-6 h-6 flex items-center justify-center font-extrabold" onclick="setAboutMeVisibility(false)">X</button></h3>
+        <div class="p-2 pt-0">
+            <div class="mb-4">
+                <h4 class="text-xl">Education</h4>
+                <div class="ps-8 text-xl">
+                    <p> <span class="font-bold">B.S. in Business Administration</span> from 
+                        <span class="p-1 beveled">
+                            <a href="https://www.babson.edu" target="_blank" rel="noopener noreferrer">
+                                <img class="inline" src="{{ url_for('static', filename='assets/babson-college.png') }}" alt="babson" width="16" height="16"> Babson College ↗
+                            </a>
+                        </span>
+                    </p>
+
+                    <p> <span class="font-bold">Certificate in Computer Science</span> from
+                        <span class="p-1 beveled">
+                            <a href="https://www.olin.edu" target="_blank" rel="noopener noreferrer">
+                                <img class="inline" src="{{ url_for('static', filename='assets/olin-college.png') }}" alt="olin" width="16" height="16"> Olin College of Engineering ↗
+                            </a>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+
+  
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const aboutMe = document.getElementById("aboutMe");
+    const aboutMeTitle = document.getElementById("aboutMeTitle");
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    aboutMeTitle.addEventListener("mousedown", (event) => {
+        isDragging = true;
+        offsetX = event.clientX - aboutMe.offsetLeft;
+        offsetY = event.clientY - aboutMe.offsetTop;
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+    aboutMeTitle.addEventListener("mouseup", () => {
+        isDragging = false;
+    });
+
+    document.addEventListener("mousemove", (event) => {
+        if (!isDragging) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+
+        window.requestAnimationFrame(() => {
+            aboutMe.style.left = mouseX - offsetX + "px";
+            aboutMe.style.top = mouseY - offsetY + "px";
+        });
+    });
+
+
+    function setAboutMeVisibility(visibility) {
+        if (visibility) {
+            document.getElementById("aboutMe").classList.remove("hidden");
+        } else {
+            document.getElementById("aboutMe").classList.add("hidden");
+        }
+    }
+</script>
 {% endblock %}

@@ -2,7 +2,7 @@
     "private": true,
     "devDependencies": {
         "tailwindcss": "^4.3.2",
-        "webpack": "^5.96.1",
+        "webpack": "^5.108.3",
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
@@ -10,6 +10,8 @@
         "build": "tailwindcss -i ./css/tailwind.css -o ./dist/css/tailwind.css --minify"
     },
     "dependencies": {
+        "@tailwindcss/cli": "^4.3.2",
+        "firebase": "^12.15.0",
         "pell": "^1.0.6"
     },
     "type": "module"

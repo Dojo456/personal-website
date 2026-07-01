@@ -59,12 +59,13 @@
 
 
 
-.beveled {
+.beveled,button {
     background: #C0C0C0;
     border-top: 2px solid #DFDFDF;
     border-left: 2px solid #DFDFDF;
     border-bottom: 2px solid #808080;
     border-right: 2px solid #808080;
+    padding: 0.5rem
 }
 
 .inverse-beveled {
@@ -73,9 +74,10 @@
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;
     border-right: 2px solid #DFDFDF;
+    padding: 0.5rem
 }
 
-button.beveled:active, a.beveled:active {
+button:active, a:active {
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;
@@ -218,4 +220,7 @@ Retrieved 2026-07-01, License - CC BY-SA 4.0
         color: #800080;
     }
  }
-    
+
+h1,h2,h3,h4,h5,h6 {
+    margin-bottom: 0.5rem;
+}

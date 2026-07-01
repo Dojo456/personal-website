@@ -97,7 +97,7 @@ alternate_titles = {
 
 
 @app.route("/blog")
-@app.route("/blog/<topic>")
+@app.route("/blog/<topic>", methods=["GET"])
 def blog(topic: str | None = None):
     blog_info: BlogInfo | None = None
 
@@ -128,7 +128,7 @@ def blog(topic: str | None = None):
     total_posts = len(blog_ref.get())
 
     # Order by creation date (descending) and limit to the current page
-    posts = (
+    posts_ref = (
         blog_ref.order_by("created", direction=firestore.firestore.Query.DESCENDING)
         .offset(start)
         .limit(per_page)
@@ -136,7 +136,8 @@ def blog(topic: str | None = None):
     )
 
     # Convert Firestore documents to dictionaries
-    posts = [post.to_dict() for post in posts]
+    posts = [post_ref.to_dict() | {"id": post_ref.id} for post_ref in posts_ref]
+
 
     # Calculate total pages
     total_pages = math.ceil(total_posts / per_page)
@@ -152,6 +153,21 @@ def blog(topic: str | None = None):
         alt_description=blog_info["alt_description"] if blog_info else None,
     )
 
+@app.route("/post/delete", methods=["POST"])
+def delete_post():
+    entry = request.form
+
+    post_id = entry["post_id"]
+    if not post_id:
+        return "Bad request!", 400
+
+    ref = db.collection("posts").document(post_id)
+    
+    data = ref.get().to_dict() | {"deleted": firestore.firestore.SERVER_TIMESTAMP}
+    db.collection("archive").add(data, ref.id)
+    ref.delete()
+
+    return redirect(request.referrer)
 
 @socketio.on("update_editor")
 def update_editor(data):
@@ -168,7 +184,7 @@ def update_editor(data):
     return "OK"
 
 
-@app.route("/blog/new", methods=["GET", "POST", "PUT"])
+@app.route("/post/new", methods=["GET", "POST", "PUT"])
 def new_post():
     if not current_user.is_authenticated:
         return redirect(url_for("home"))
@@ -192,7 +208,6 @@ def new_post():
     return render_template(
         "new_post.jinja", topics=list(topics), initial_content=initial_content
     )
-
 
 @app.route("/search")
 def search():
