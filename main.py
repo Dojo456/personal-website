@@ -1,5 +1,7 @@
 import base64
 import html
+import traceback
+from http import HTTPStatus
 import math
 import os
 import time
@@ -31,6 +33,7 @@ from utils import BlogInfo
 load_dotenv()
 
 API_KEY = os.getenv("FIREBASE_API_KEY")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 # Application Default credentials are automatically created.
 
@@ -51,6 +54,11 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
 socketio = SocketIO(app)
+
+app.register_error_handler(
+    HTTPStatus.INTERNAL_SERVER_ERROR,
+    lambda e: traceback.print_exception(e, e.__traceback__),
+)
 
 # Configure Jinja2 to recognize .jinja files
 
@@ -314,7 +322,7 @@ def projects():
 
     response = requests.get(
         f"https://api.github.com/users/{username}/repos",
-        headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
+        headers={"Authorization": f"Bearer {GITHUB_TOKEN}"},
     )
     if not response.ok:
         abort(500, response.text)

@@ -12,7 +12,7 @@
 <form id="new-post-form" class="flex flex-col gap-4" action="{{ url_for('new_post') }}" method="POST">
     <input type="text" name="title" placeholder="Title" required>
     <input type="hidden" name="topic" id="topic" value="default" />
-    <select id="topic-select" required>
+    <select id="topic-select " required>
         <option value="default" selected="true">Default</option>
         {% for topic in topics %}
         <option value="{{ topic }}">{{ topic }}</option>
@@ -22,7 +22,7 @@
     <input class="hidden" type="text" id="topic-text" />
     <div id="editor"></div>
     <input type="hidden" name="content" id="content">
-    <button type="submit">Submit</button>
+    <button class="beveled" type="submit">Submit</button>
 </form>
 
 {% endblock %}
@@ -59,5 +59,22 @@
             document.getElementById('content').value = editor.getData();
         });
     });
+
+    const form = document.getElementById("new-post-form")
+
+    form.addEventListener("submit", (event) => {
+        if (form.classList.contains("submitting")) {
+            event.preventDefault()
+            return
+        }
+
+        form.classList.add("submitting")
+
+        const submitButton = form.querySelector("[type=submit]")
+        if (submitButton) {
+            submitButton.textContent = "Submitting..."
+            submitButton.ariaDisabled = true;
+        }
+    })
 </script>
 {% endblock %}
