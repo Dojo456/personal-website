@@ -28,7 +28,7 @@ Welcome to My Personal Website
         <button class="beveled p-1" onclick="setAboutMeVisibility(true)">Learn more about me</button>
     </div>
 
-    <div class="beveled fixed hidden w-[700px] h-[500px]" style="top: 50%; left: 50%; transform: translate(-50%, -50%);" id="aboutMe">
+    <div class="window beveled fixed hidden w-[700px] h-[500px]" style="top: 50%; left: 50%; transform: translate(-50%, -50%);" id="aboutMe">
         <h3 class="title-bar flex justify-between items-center cursor-move" id="aboutMeTitle">A little about me <button class="beveled text-black w-6 h-6 flex items-center justify-center font-extrabold" onclick="setAboutMeVisibility(false)">X</button></h3>
         <div class="p-2 pt-0">
             <div class="mb-4">
@@ -61,41 +61,6 @@ Welcome to My Personal Website
 
 {% block scripts %}
 <script>
-    const aboutMe = document.getElementById("aboutMe");
-    const aboutMeTitle = document.getElementById("aboutMeTitle");
-
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    aboutMeTitle.addEventListener("mousedown", (event) => {
-        isDragging = true;
-        offsetX = event.clientX - aboutMe.offsetLeft;
-        offsetY = event.clientY - aboutMe.offsetTop;
-
-        event.preventDefault();
-        event.stopPropagation();
-    });
-    aboutMeTitle.addEventListener("mouseup", () => {
-        isDragging = false;
-    });
-
-    document.addEventListener("mousemove", (event) => {
-        if (!isDragging) return;
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
-
-        window.requestAnimationFrame(() => {
-            aboutMe.style.left = mouseX - offsetX + "px";
-            aboutMe.style.top = mouseY - offsetY + "px";
-        });
-    });
-
-
     function setAboutMeVisibility(visibility) {
         if (visibility) {
             document.getElementById("aboutMe").classList.remove("hidden");

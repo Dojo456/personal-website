@@ -27,7 +27,9 @@ from flask_login import LoginManager, UserMixin, current_user, login_user, logou
 from jinja2 import FileSystemLoader, select_autoescape
 
 from routers import playlist_blueprint
-from utils import BlogInfo
+import spotify_router
+from utils import BlogInfo, requires_auth
+from firebase import db
 
 # Environment Setup
 load_dotenv()
@@ -37,15 +39,6 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 # Application Default credentials are automatically created.
 
-if os.getenv("ENV") == "production":
-    default_app = firebase_admin.initialize_app()
-else:
-    default_app = firebase_admin.initialize_app(
-        credential=firebase_admin.credentials.Certificate(
-            os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
-        )
-    )
-db = firestore.client()
 
 # Flask Setup
 
@@ -54,6 +47,8 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
 socketio = SocketIO(app)
+
+app.register_blueprint(spotify_router.spotify_router)
 
 app.register_error_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -185,10 +180,8 @@ def update_editor(data):
 
 
 @app.route("/post/new", methods=["GET", "POST", "PUT"])
+@requires_auth
 def new_post():
-    if not current_user.is_authenticated:
-        return redirect(url_for("home"))
-
     if request.method == "POST":
         entry: dict[str, typing.Any] = dict(request.form)
 
@@ -232,10 +225,8 @@ def search():
 
 
 @app.route("/search_terms", methods=["GET", "POST"])
+@requires_auth
 def search_terms():
-    if not current_user.is_authenticated:
-        return redirect(url_for("home"))
-
     if request.method == "POST":
         term = request.form.get("term")
         description = request.form.get("description")
@@ -425,10 +416,10 @@ def project_details(project):
 
 
 @playlist_blueprint.before_request
+@requires_auth
 def before_request():
     if (
         "playlist" not in session.get("scopes", [])
-        and not current_user.is_authenticated
     ):
         return redirect(url_for("access", on_success=url_for("playlist.playlist")))
 
