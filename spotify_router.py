@@ -77,7 +77,7 @@ def get_access_token() -> str:
         saved_token = token
         assert token
         return token
-    elif time.time() < expires_at: # Need to refresh
+    elif time.time() > expires_at: # Need to refresh
         refresh_token = data.get("refresh_token")
 
         req_body = {
@@ -97,6 +97,8 @@ def get_access_token() -> str:
 
         if resp.ok:
             save_token_from_resp_json(data)
+            expires_at = data["expires_at"]
+            saved_token = data["access_token"]
             return data["access_token"]
         else:
             raise RuntimeError("spotify request failed", resp.status_code, data, "request:", {"body": req_body, "headers": req_headers})
