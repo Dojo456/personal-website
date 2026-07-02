@@ -48,7 +48,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 socketio = SocketIO(app)
 
-app.register_blueprint(spotify_router.spotify_router)
+# app.register_blueprint(spotify_router.spotify_router)
 
 app.register_error_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR,
