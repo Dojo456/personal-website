@@ -36,7 +36,7 @@
 
     createEditor(document.getElementById('editor')).then(editor => {
         editor.setData("{{ initial_content | safe }}");
-        var socket = io();
+        var socket = io({ transports: ['websocket'] });
 
         editor.model.document.on('change', function (event) {
             socket.emit('update_editor', { content: editor.getData() });
