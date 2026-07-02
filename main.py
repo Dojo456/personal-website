@@ -60,7 +60,7 @@ sentry_sdk.init(
 )
 
 
-# app.register_blueprint(spotify_router.spotify_router)
+app.register_blueprint(spotify_router.spotify_router)
 
 app.register_error_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR,
