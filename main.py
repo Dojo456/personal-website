@@ -8,7 +8,6 @@ import time
 import typing
 from datetime import datetime
 
-import firebase_admin
 from flask_socketio import SocketIO
 import requests
 from dotenv import load_dotenv
@@ -47,7 +46,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
-socketio = SocketIO(app)
+# socketio = SocketIO(app)
 sentry_sdk.init(
     dsn="https://408e3609a2d1959d32a6f0b7b5e8b245@o4511663717089280.ingest.us.sentry.io/4511663719120896",
     # Add data like request headers and IP for users,
@@ -177,19 +176,19 @@ def delete_post():
 
     return redirect(request.referrer)
 
-@socketio.on("update_editor")
-def update_editor(data):
-    if data is None:
-        return "Missing data"
+# @socketio.on("update_editor")
+# def update_editor(data):
+#     if data is None:
+#         return "Missing data"
 
-    content = data.get("content")
+#     content = data.get("content")
 
-    if not content:
-        return "Missing content"
+#     if not content:
+#         return "Missing content"
 
-    db.collection("admin").document("editor").update({"content": content})
+#     db.collection("admin").document("editor").update({"content": content})
 
-    return "OK"
+#     return "OK"
 
 
 @app.route("/post/new", methods=["GET", "POST", "PUT"])
