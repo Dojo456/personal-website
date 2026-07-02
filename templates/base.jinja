@@ -67,8 +67,8 @@
             <h4 class="title-bar flex flex-row justify-between pr-0" style="margin: 0px; padding-right:0px">I'm Now Listening To: 
                 <button id="spotifyButton" class="m-[2px] beveled text-black w-6 h-6 flex items-center justify-center font-extrabold">_</button>
             </h4>
-            <a id="spotifyLink" class="flex flex-col" target="_blank" rel="noopener noreferrer" hidden>
-                <div id="spotify" class="flex flex-row mb-[4px]">
+            <a id="spotify" class="flex flex-col" target="_blank" rel="noopener noreferrer" hidden>
+                <div class="flex flex-row mb-[4px]">
                     <img id="spotifyImg" src="" alt="album cover" class="w-[64px] h-[64px]">
                     <span class="ms-1">
                         <h4 class="text-md font-bold text-ellipsis line-clamp-1" id="spotifyTrack">Song Name</h4>
@@ -98,7 +98,6 @@
         const spotify = document.getElementById("spotify")
         const spotifyPlaceholder = document.getElementById("spotifyPlaceholder")
         const spotifyImg = document.getElementById("spotifyImg")
-        const spotifyLink = document.getElementById("spotifyLink")
         const spotifyTrack = document.getElementById("spotifyTrack")
         const spotifyArtist = document.getElementById("spotifyArtist")
         const spotifyProgress = document.getElementById("spotifyProgress")
@@ -126,14 +125,14 @@
             const data = await resp.json()
 
             if (data) {
-                spotifyLink.hidden = false
+                spotify.hidden = false
                 spotifyPlaceholder.hidden = true
 
                 spotifyImg.src = data.cover_image.url
                 spotifyImg.width = data.cover_image.width
                 spotifyImg.height = data.cover_image.height
                 spotifyImg.alt = data.album
-                spotifyLink.href = data.link
+                spotify.href = data.link
                 spotifyTrack.innerText = data.track
                 spotifyArtist.innerText = data.artist
                 spotifyProgress.max = data.duration_ms
@@ -142,7 +141,7 @@
                 spotifyProgressTime.textContent = formatTime(data.progress_ms)
                 spotifyIsPlaying = data.is_playing
             } else {
-                spotifyLink.hidden = true
+                spotify.hidden = true
                 spotifyPlaceholder.hidden = false
             }
         }
