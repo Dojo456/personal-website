@@ -92,7 +92,7 @@ def get_access_token() -> str:
 def save_token_from_resp_json(json: dict):
     json["expires_at"] = int(time.time() + json["expires_in"])
 
-    db.collection("admin").document("spotify").set(json)
+    db.collection("admin").document("spotify").set(json, merge=True)
 
 @spotify_router.route("/playback_state")
 def playback_state():
