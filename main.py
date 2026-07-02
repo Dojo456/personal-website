@@ -30,6 +30,7 @@ from routers import playlist_blueprint
 import spotify_router
 from utils import BlogInfo, requires_auth
 from firebase import db
+import sentry_sdk
 
 # Environment Setup
 load_dotenv()
@@ -47,6 +48,18 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
 socketio = SocketIO(app)
+sentry_sdk.init(
+    dsn="https://408e3609a2d1959d32a6f0b7b5e8b245@o4511663717089280.ingest.us.sentry.io/4511663719120896",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+    traces_sample_rate=1.0,
+    profile_session_sample_rate=1.0,
+    # Set profile_lifecycle to "trace" to automatically
+    # run the profiler on when there is an active transaction
+    profile_lifecycle="trace"
+)
+
 
 app.register_blueprint(spotify_router.spotify_router)
 

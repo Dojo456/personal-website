@@ -3,3 +3,4 @@ python-dotenv
 firebase-admin
 flask-login
 flask-socketio
+sentry-sdk

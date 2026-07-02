@@ -57,37 +57,51 @@ def callback():
 
     return redirect(url_for("home"))
 
-def get_access_token() -> str:
-    data = db.collection("admin").document("spotify").get()
-    expires_at = data.get("expires_at")
+saved_token = None
+expires_at = None
 
-    if time.time() < expires_at:
+def get_access_token() -> str:
+    global expires_at
+    global saved_token
+
+    if saved_token != None and time.time() < expires_at:
+        return saved_token
+
+    data = db.collection("admin").document("spotify").get()
+
+    print("refetching access token")
+
+    if not saved_token: # First time fetching, will cache
         token = data.get("access_token")
+        expires_at = data.get("expires_at")
+        saved_token = token
         assert token
         return token
+    elif time.time() < expires_at: # Need to refresh
+        refresh_token = data.get("refresh_token")
 
-    refresh_token = data.get("refresh_token")
+        req_body = {
+            "refresh_token": refresh_token,
+            "grant_type": "refresh_token",
+            "client_id": SPOTIFY_CLIENT_ID
+        }
 
-    req_body = {
-        "refresh_token": refresh_token,
-        "grant_type": "refresh_token",
-        "client_id": SPOTIFY_CLIENT_ID
-    }
+        req_headers = {
+            'content-type': 'application/x-www-form-urlencoded',
+            'authorization': "Basic " + get_spotify_token()
+        }
 
-    req_headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-        'authorization': "Basic " + get_spotify_token()
-    }
+        resp = requests.post("https://accounts.spotify.com/api/token", data=req_body, headers=req_headers)
 
-    resp = requests.post("https://accounts.spotify.com/api/token", data=req_body, headers=req_headers)
+        data = resp.json()
 
-    data = resp.json()
+        if resp.ok:
+            save_token_from_resp_json(data)
+            return data["access_token"]
+        else:
+            raise RuntimeError("spotify request failed", resp.status_code, data, "request:", {"body": req_body, "headers": req_headers})
 
-    if resp.ok:
-        save_token_from_resp_json(data)
-        return data["access_token"]
-    else:
-        raise RuntimeError("spotify request failed", resp.status_code, data, "request:", {"body": req_body, "headers": req_headers})
+    return saved_token
 
 def save_token_from_resp_json(json: dict):
     json["expires_at"] = int(time.time() + json["expires_in"])
@@ -96,6 +110,7 @@ def save_token_from_resp_json(json: dict):
 
 @spotify_router.route("/playback_state")
 def playback_state():
+    
     resp = requests.get("https://api.spotify.com/v1/me/player", headers={"Authorization": "Bearer " + get_access_token()})
 
     if resp.status_code == 200:
