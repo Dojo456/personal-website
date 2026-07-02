@@ -1,5 +1,7 @@
 import base64
 import html
+import traceback
+from http import HTTPStatus
 import math
 import os
 import time
@@ -25,24 +27,18 @@ from flask_login import LoginManager, UserMixin, current_user, login_user, logou
 from jinja2 import FileSystemLoader, select_autoescape
 
 from routers import playlist_blueprint
-from utils import BlogInfo
+import spotify_router
+from utils import BlogInfo, requires_auth
+from firebase import db
 
 # Environment Setup
 load_dotenv()
 
 API_KEY = os.getenv("FIREBASE_API_KEY")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 # Application Default credentials are automatically created.
 
-if os.getenv("ENV") == "production":
-    default_app = firebase_admin.initialize_app()
-else:
-    default_app = firebase_admin.initialize_app(
-        credential=firebase_admin.credentials.Certificate(
-            os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
-        )
-    )
-db = firestore.client()
 
 # Flask Setup
 
@@ -51,6 +47,13 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
 socketio = SocketIO(app)
+
+app.register_blueprint(spotify_router.spotify_router)
+
+app.register_error_handler(
+    HTTPStatus.INTERNAL_SERVER_ERROR,
+    lambda e: traceback.print_exception(e, e.__traceback__),
+)
 
 # Configure Jinja2 to recognize .jinja files
 
@@ -89,7 +92,7 @@ alternate_titles = {
 
 
 @app.route("/blog")
-@app.route("/blog/<topic>")
+@app.route("/blog/<topic>", methods=["GET"])
 def blog(topic: str | None = None):
     blog_info: BlogInfo | None = None
 
@@ -120,7 +123,7 @@ def blog(topic: str | None = None):
     total_posts = len(blog_ref.get())
 
     # Order by creation date (descending) and limit to the current page
-    posts = (
+    posts_ref = (
         blog_ref.order_by("created", direction=firestore.firestore.Query.DESCENDING)
         .offset(start)
         .limit(per_page)
@@ -128,7 +131,8 @@ def blog(topic: str | None = None):
     )
 
     # Convert Firestore documents to dictionaries
-    posts = [post.to_dict() for post in posts]
+    posts = [post_ref.to_dict() | {"id": post_ref.id} for post_ref in posts_ref]
+
 
     # Calculate total pages
     total_pages = math.ceil(total_posts / per_page)
@@ -144,6 +148,21 @@ def blog(topic: str | None = None):
         alt_description=blog_info["alt_description"] if blog_info else None,
     )
 
+@app.route("/post/delete", methods=["POST"])
+def delete_post():
+    entry = request.form
+
+    post_id = entry["post_id"]
+    if not post_id:
+        return "Bad request!", 400
+
+    ref = db.collection("posts").document(post_id)
+    
+    data = ref.get().to_dict() | {"deleted": firestore.firestore.SERVER_TIMESTAMP}
+    db.collection("archive").add(data, ref.id)
+    ref.delete()
+
+    return redirect(request.referrer)
 
 @socketio.on("update_editor")
 def update_editor(data):
@@ -160,11 +179,9 @@ def update_editor(data):
     return "OK"
 
 
-@app.route("/blog/new", methods=["GET", "POST", "PUT"])
+@app.route("/post/new", methods=["GET", "POST", "PUT"])
+@requires_auth
 def new_post():
-    if not current_user.is_authenticated:
-        return redirect(url_for("home"))
-
     if request.method == "POST":
         entry: dict[str, typing.Any] = dict(request.form)
 
@@ -184,7 +201,6 @@ def new_post():
     return render_template(
         "new_post.jinja", topics=list(topics), initial_content=initial_content
     )
-
 
 @app.route("/search")
 def search():
@@ -209,10 +225,8 @@ def search():
 
 
 @app.route("/search_terms", methods=["GET", "POST"])
+@requires_auth
 def search_terms():
-    if not current_user.is_authenticated:
-        return redirect(url_for("home"))
-
     if request.method == "POST":
         term = request.form.get("term")
         description = request.form.get("description")
@@ -314,7 +328,7 @@ def projects():
 
     response = requests.get(
         f"https://api.github.com/users/{username}/repos",
-        headers={"Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}"},
+        headers={"Authorization": f"Bearer {GITHUB_TOKEN}"},
     )
     if not response.ok:
         abort(500, response.text)
@@ -402,10 +416,10 @@ def project_details(project):
 
 
 @playlist_blueprint.before_request
+@requires_auth
 def before_request():
     if (
         "playlist" not in session.get("scopes", [])
-        and not current_user.is_authenticated
     ):
         return redirect(url_for("access", on_success=url_for("playlist.playlist")))
 

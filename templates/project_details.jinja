@@ -14,8 +14,8 @@ My GitHub Project: {{ project_name }}
         ← Back to Projects
     </a>
     {% if current_user.is_authenticated %}
-    <button id="edit-button" class="ml-4 bg-blue-500 text-white px-4 py-2 w-32 rounded">Edit</button>
-    <button id="top-cancel-button" class="ml-4 bg-gray-500 text-white px-4 py-2 w-32 rounded hidden">Cancel</button>
+    <button id="edit-button" class="ml-4 bg-blue-500 text-white px-4 py-2 w-32 rounded-sm">Edit</button>
+    <button id="top-cancel-button" class="ml-4 bg-gray-500 text-white px-4 py-2 w-32 rounded-sm hidden">Cancel</button>
     {% endif %}
 </div>
 
@@ -30,8 +30,8 @@ My GitHub Project: {{ project_name }}
     <form method="POST" class="mt-4 flex gap-2" id="edit-form">
         <input type="hidden" id="content" name="content">
         <input type="hidden" id="sha" name="sha" value="{{ sha }}">
-        <button type="submit" id="save-button" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-        <button id="cancel-button" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+        <button type="submit" id="save-button" class="bg-green-500 text-white px-4 py-2 rounded-sm">Save</button>
+        <button id="cancel-button" class="bg-gray-500 text-white px-4 py-2 rounded-sm">Cancel</button>
     </form>
 </div>
 {% endif %}

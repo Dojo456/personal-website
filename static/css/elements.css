@@ -59,7 +59,7 @@
 
 
 
-.beveled {
+.beveled,button {
     background: #C0C0C0;
     border-top: 2px solid #DFDFDF;
     border-left: 2px solid #DFDFDF;
@@ -67,7 +67,15 @@
     border-right: 2px solid #808080;
 }
 
-button.beveled:active, a.beveled:active {
+.inverse-beveled {
+    background: #C0C0C0;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #DFDFDF;
+    border-right: 2px solid #DFDFDF;
+}
+
+button:active, a:active {
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-bottom: 2px solid #DFDFDF;
@@ -117,7 +125,7 @@ button.beveled:active, a.beveled:active {
     color: #000000;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     .projects-grid {
         grid-template-columns: 1fr;
     }
@@ -193,3 +201,20 @@ pre {
         border-radius: 3px;
     }
 }
+
+/*
+Source - https://stackoverflow.com/a/63883723
+Posted by Luke Storry, modified by community. See post 'Timeline' for change history
+Retrieved 2026-07-01, License - CC BY-SA 4.0
+*/
+
+.link {
+    text-decoration: underline;
+    color: #0000FF;
+    &:hover {
+        color: #0000FF;
+    }
+    &:visited {
+        color: #800080;
+    }
+ }

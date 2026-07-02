@@ -26,15 +26,15 @@
                 <li><a href="{{ additional_link[0] }}">{{ additional_link[1] }}</a></li>
                 {% endfor %}
                 {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('spotify.login') }}">Spotify</a></li>
                 <li>
                     <form action="/logout" method="post">
                         <button id="logout-button" class="beveled p-1" type="submit">Logout</button>
                     </form>
-                </li>
-
+                </li>   
                 {% endif %}
             </ul>
-            <p class="flex items-center">&copy; 2024 Daniel Liao. All rights reserved.</p>
+            <p class="flex items-center">&copy; 2026 Daniel Liao. All rights reserved.</p>
         </nav>
     </header>
     <main class="grow flex flex-col items-center">
@@ -46,7 +46,7 @@
             </span>
             <form class="mh-2" action="javascript:void(0);">
                 <label class="flex items-center gap-2">Search:
-                    <input type="text" id="query" name="query" class="w-full outline-none inset-beveled">
+                    <input type="text" id="query" name="query" class="w-full outline-hidden inset-beveled">
                 </label>
                 <ul id="search-results">
                     {% for result in results %}
@@ -63,7 +63,28 @@
             {% block content %}{% endblock %}
         </div>
 
-
+        <div class="window flex flex-col beveled p-0 fixed w-[250px] h-fit right-2 bottom-2">
+            <h4 class="title-bar flex flex-row justify-between pr-0" style="margin: 0px; padding-right:0px">I'm Now Listening To: 
+                <button id="spotifyButton" class="m-[2px] beveled text-black w-6 h-6 flex items-center justify-center font-extrabold">_</button>
+            </h4>
+            <a id="spotifyLink" class="flex flex-col" target="_blank" rel="noopener noreferrer" hidden>
+                <div id="spotify" class="flex flex-row mb-[4px]">
+                    <img id="spotifyImg" src="" alt="album cover" class="w-[64px] h-[64px]">
+                    <span class="ms-1">
+                        <h4 class="text-md font-bold text-ellipsis line-clamp-1" id="spotifyTrack">Song Name</h4>
+                        <p class="text-md text-ellipsis line-clamp-1" id="spotifyArtist">Artist Name</p>
+                    </span> 
+                </div>
+                <div class="flex flex-row justify-between items-center gap-1">
+                    <p id="spotifyProgressTime"></p>
+                    <progress id="spotifyProgress" aria-label="song progress"></progress>
+                    <p id="spotifyDurationTime"></p>
+                </div>
+            </a>
+            <div id="spotifyPlaceholder">
+                <p>Nothing right now! womp womp</p>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -71,6 +92,131 @@
 
         function hideSearchForm() {
             searchForm.classList.add("hidden");
+        }
+
+  
+        const spotify = document.getElementById("spotify")
+        const spotifyPlaceholder = document.getElementById("spotifyPlaceholder")
+        const spotifyImg = document.getElementById("spotifyImg")
+        const spotifyLink = document.getElementById("spotifyLink")
+        const spotifyTrack = document.getElementById("spotifyTrack")
+        const spotifyArtist = document.getElementById("spotifyArtist")
+        const spotifyProgress = document.getElementById("spotifyProgress")
+        const spotifyProgressTime = document.getElementById("spotifyProgressTime")
+        const spotifyDurationTime = document.getElementById("spotifyDurationTime")
+
+        let spotifyIsPlaying = true
+
+        document.getElementById("spotifyButton").addEventListener("click", (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+
+            spotify.hidden = !spotify.hidden
+        })
+
+        function formatTime(ms) {
+            const mins = Math.floor(ms / 1000 / 60)
+            const secs = Math.floor((ms / 1000) - (mins * 60)).toString().padStart(2, "0")
+
+            return `${mins}:${secs}`
+        }
+
+        async function updateSpotifyPlayback() {
+            const resp = await fetch("/spotify/playback_state")
+            const data = await resp.json()
+
+            if (data) {
+                spotifyLink.hidden = false
+                spotifyPlaceholder.hidden = true
+
+                spotifyImg.src = data.cover_image.url
+                spotifyImg.width = data.cover_image.width
+                spotifyImg.height = data.cover_image.height
+                spotifyImg.alt = data.album
+                spotifyLink.href = data.link
+                spotifyTrack.innerText = data.track
+                spotifyArtist.innerText = data.artist
+                spotifyProgress.max = data.duration_ms
+                spotifyProgress.value = data.progress_ms
+                spotifyDurationTime.textContent = formatTime(data.duration_ms)
+                spotifyProgressTime.textContent = formatTime(data.progress_ms)
+                spotifyIsPlaying = data.is_playing
+            } else {
+                spotifyLink.hidden = true
+                spotifyPlaceholder.hidden = false
+            }
+        }
+
+        const progressUpdateInterval = 1000
+        const fetchInterval = 5000
+
+        let fetching = false
+        let lastFetched = 0
+
+        function spotifyInterval() {
+            spotifyProgressTime.textContent = formatTime(spotifyProgress.value)
+
+            if (spotifyIsPlaying) {
+                spotifyProgress.value += progressUpdateInterval
+            }
+
+            if ((Date.now() > lastFetched + fetchInterval || spotifyProgress.value >= spotifyProgress.max) && !fetching) {
+                fetching = true
+                updateSpotifyPlayback().finally(() => {
+                    fetching = false
+                    lastFetched = Date.now()
+                })
+            }
+
+        }
+
+        spotifyInterval()
+
+        setInterval(spotifyInterval, progressUpdateInterval)
+
+        const titleBars = Array.from(document.getElementsByClassName("title-bar")).filter((t) => t.parentElement.classList.contains("window"))
+
+        for (const titleBar of titleBars) {
+            const parent = titleBar.parentElement
+
+            let isDragging = false;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            titleBar.style.cursor = "move"
+
+            titleBar.addEventListener("mousedown", (event) => {
+                isDragging = true;
+                offsetX = event.clientX - parent.offsetLeft;
+                offsetY = event.clientY - parent.offsetTop;
+                parent.style.position = "fixed"
+                
+                titleBars.forEach((t) => t.parentElement.style.zIndex = "1")
+                parent.style.zIndex = "10"
+
+                console.log(titleBar.style)
+
+                event.preventDefault();
+                event.stopPropagation();
+            });
+            titleBar.addEventListener("mouseup", () => {
+                isDragging = false;
+            });
+
+            document.addEventListener("mousemove", (event) => {
+                if (!isDragging) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const mouseX = event.clientX;
+                const mouseY = event.clientY;
+
+                window.requestAnimationFrame(() => {
+                    parent.style.left = mouseX - offsetX + "px";
+                    parent.style.top = mouseY - offsetY + "px";
+                });
+            });
         }
     </script>
 

@@ -1,4 +1,4 @@
-@import "elements.css";
+@import './elements.css';
 
 @font-face {
     font-family: "W95FA";
@@ -132,3 +132,13 @@ nav ul li a:hover {
     background: #C0C0C0;
 }
 
+select {
+    background: white;
+    padding: 0.5rem;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents all mouse interactions */
+}
