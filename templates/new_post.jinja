@@ -28,22 +28,52 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
-    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
-    crossorigin="anonymous"></script>
 <script type="module">
     import { createEditor } from "{{ url_for('static', filename='js/script.js') }}";
 
-    const content = document.getElementById("content")
+    // Source - https://stackoverflow.com/a/75988895
+    // Posted by Mr. Polywhirl, modified by community. See post 'Timeline' for change history
+    // Retrieved 2026-07-20, License - CC BY-SA 4.0
+
+    const debounce = (callback, wait) => {
+        let timeoutId = null;
+
+        return (...args) => {
+            window.clearTimeout(timeoutId);
+            timeoutId = window.setTimeout(() => {
+                callback(...args);
+            }, wait);
+        };
+    }
+
+    let abortController = null
+
+    const updateEditor = debounce(async (data) => {
+        abortController?.abort()
+        abortController = new AbortController()
+        
+        await fetch("/update_editor", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: data
+            }),
+            signal: abortController.signal
+        })
+    }, 400) 
 
     createEditor(document.getElementById('editor')).then(editor => {
         editor.setData("{{ initial_content | safe }}");
-        var socket = io({ transports: ['websocket'] });
+
+            const content = document.getElementById("content")
 
         editor.model.document.on('change', function (event) {
             const data = editor.getData()
-            socket.emit('update_editor', { content: data });
             content.value = data
+
+            updateEditor(data)
         });
 
         document.getElementById('topic-select').addEventListener('change', function (event) {

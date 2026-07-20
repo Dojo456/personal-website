@@ -8,7 +8,6 @@ import time
 import typing
 from datetime import datetime
 
-from flask_socketio import SocketIO
 import requests
 from dotenv import load_dotenv
 from firebase_admin import auth, firestore
@@ -65,8 +64,6 @@ app.register_error_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR,
     lambda e: traceback.print_exception(e, e.__traceback__),
 )
-
-socketio = SocketIO(app)
 
 # Configure Jinja2 to recognize .jinja files
 
@@ -177,8 +174,11 @@ def delete_post():
 
     return redirect(request.referrer)
 
-@socketio.on("update_editor")
-def update_editor(data):
+@app.route("/update_editor", methods=["POST"])
+@requires_auth
+def update_editor():
+    data = request.get_json()
+
     if data is None:
         return "Missing data"
 
@@ -189,7 +189,7 @@ def update_editor(data):
 
     db.collection("admin").document("editor").update({"content": content})
 
-    return "OK"
+    return "", 204
 
 
 @app.route("/post/new", methods=["GET", "POST", "PUT"])
