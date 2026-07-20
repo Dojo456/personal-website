@@ -177,19 +177,19 @@ def delete_post():
 
     return redirect(request.referrer)
 
-# @socketio.on("update_editor")
-# def update_editor(data):
-#     if data is None:
-#         return "Missing data"
+@socketio.on("update_editor")
+def update_editor(data):
+    if data is None:
+        return "Missing data"
 
-#     content = data.get("content")
+    content = data.get("content")
 
-#     if not content:
-#         return "Missing content"
+    if not content:
+        return "Missing content"
 
-#     db.collection("admin").document("editor").update({"content": content})
+    db.collection("admin").document("editor").update({"content": content})
 
-#     return "OK"
+    return "OK"
 
 
 @app.route("/post/new", methods=["GET", "POST", "PUT"])

@@ -34,12 +34,16 @@
 <script type="module">
     import { createEditor } from "{{ url_for('static', filename='js/script.js') }}";
 
+    const content = document.getElementById("content")
+
     createEditor(document.getElementById('editor')).then(editor => {
         editor.setData("{{ initial_content | safe }}");
         var socket = io({ transports: ['websocket'] });
 
         editor.model.document.on('change', function (event) {
-            socket.emit('update_editor', { content: editor.getData() });
+            const data = editor.getData()
+            socket.emit('update_editor', { content: data });
+            content.value = data
         });
 
         document.getElementById('topic-select').addEventListener('change', function (event) {
@@ -53,10 +57,6 @@
 
         document.getElementById('topic-text').addEventListener('change', function (event) {
             document.getElementById('topic').value = event.target.value;
-        });
-
-        document.getElementById('new-post-form').addEventListener('submit', function (event) {
-            document.getElementById('content').value = editor.getData();
         });
     });
 
