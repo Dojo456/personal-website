@@ -46,7 +46,6 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 login_manager = LoginManager()
 login_manager.init_app(app)
-# socketio = SocketIO(app)
 sentry_sdk.init(
     dsn="https://408e3609a2d1959d32a6f0b7b5e8b245@o4511663717089280.ingest.us.sentry.io/4511663719120896",
     # Add data like request headers and IP for users,
@@ -66,6 +65,8 @@ app.register_error_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR,
     lambda e: traceback.print_exception(e, e.__traceback__),
 )
+
+socketio = SocketIO(app)
 
 # Configure Jinja2 to recognize .jinja files
 
